@@ -22,7 +22,7 @@ public sealed partial class FormCreateTag : GitModuleForm
     private readonly IGitTagController _gitTagController;
     private string _currentRemote = "";
 
-    public FormCreateTag(IGitUICommands commands, ObjectId? objectId)
+    public FormCreateTag(IGitUICommands commands, ObjectId objectId)
         : base(commands)
     {
         InitializeComponent();
@@ -33,13 +33,17 @@ public sealed partial class FormCreateTag : GitModuleForm
 
         tagMessage.MistakeFont = new Font(tagMessage.MistakeFont, FontStyle.Underline);
 
-        if (objectId?.IsArtificial is true)
+        if (objectId.IsArtificial)
         {
-            objectId = null;
+            objectId = default;
         }
 
-        objectId ??= Module.GetCurrentCheckout();
-        if (objectId is not null)
+        if (objectId.IsZero)
+        {
+            objectId = Module.GetCurrentCheckout();
+        }
+
+        if (!objectId.IsZero)
         {
             commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
         }
@@ -72,7 +76,7 @@ public sealed partial class FormCreateTag : GitModuleForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -80,9 +84,9 @@ public sealed partial class FormCreateTag : GitModuleForm
     {
         ObjectId objectId = commitPickerSmallControl1.SelectedObjectId;
 
-        if (objectId is null)
+        if (objectId.IsZero)
         {
-            MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _noRevisionSelected.Text, _messageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return "";
         }
 

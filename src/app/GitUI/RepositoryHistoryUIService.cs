@@ -1,4 +1,5 @@
-﻿using GitCommands;
+using System.Runtime.InteropServices;
+using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
@@ -38,7 +39,7 @@ public interface IRepositoryHistoryUIService
     void TriggerBranchNameCacheUpdate(bool onlyIfEmpty = false);
 }
 
-internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
+internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
 {
     private readonly IGitExecutorProvider _executorProvider;
     private readonly IRepositoryCurrentBranchNameCache _branchNameCache;
@@ -47,7 +48,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     private JoinableTask? _branchCacheUpdateTask;
     private bool _firstLoad = true;
 
-    public event EventHandler<GitModuleEventArgs> GitModuleChanged;
+    public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
 
     internal RepositoryHistoryUIService(IGitExecutorProvider executorProvider, IRepositoryCurrentBranchNameCache branchNameCache, IInvalidRepositoryRemover invalidRepositoryRemover)
     {
@@ -147,7 +148,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
 
-        foreach (IGrouping<string, RecentRepoInfo> repo in pinnedRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
+        foreach (IGrouping<string?, RecentRepoInfo> repo in pinnedRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
         {
             AddFavouriteRepositories(repo.Key, repo);
         }
@@ -204,7 +205,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
 
         int number = 0;
-        foreach (RecentRepoInfo repo in pinnedRepos)
+        foreach (RecentRepoInfo repo in CollectionsMarshal.AsSpan(pinnedRepos))
         {
             AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored);
         }
@@ -216,7 +217,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
                 container.DropDownItems.Add(new ToolStripSeparator());
             }
 
-            foreach (RecentRepoInfo repo in allRecentRepos)
+            foreach (RecentRepoInfo repo in CollectionsMarshal.AsSpan(allRecentRepos))
             {
                 AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored);
             }
@@ -284,7 +285,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
                     .AsParallel()
                     .WithCancellation(cancellationToken)
                     .WithDegreeOfParallelism(Math.Min(MaxBranchNameFetchParallelism, Math.Max(1, Environment.ProcessorCount / 2)))
-                    .ForAll(path => _ = _branchNameCache.GetCurrentBranchName(path));
+                    .ForAll(path => _ = _branchNameCache.GetUpdatedBranchName(path));
             }
         }
     }

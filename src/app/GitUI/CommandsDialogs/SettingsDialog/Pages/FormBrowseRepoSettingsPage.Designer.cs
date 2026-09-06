@@ -107,14 +107,14 @@ partial class FormBrowseRepoSettingsPage
         lblDefaultShell.TabIndex = 0;
         lblDefaultShell.Text = "Default shell";
         lblDefaultShell.TextAlign = ContentAlignment.MiddleLeft;
-        // 
+        //
         // chkUseBrowseForFileHistory
-        // 
+        //
         chkUseBrowseForFileHistory.AutoSize = true;
         chkUseBrowseForFileHistory.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         chkUseBrowseForFileHistory.Checked = false;
         chkUseBrowseForFileHistory.Dock = DockStyle.Fill;
-        chkUseBrowseForFileHistory.Location = new Point(4, 30);
+        chkUseBrowseForFileHistory.Location = new Point(4, 57);
         chkUseBrowseForFileHistory.ManualSectionAnchorName = "general-show-file-history-in-the-main-window";
         chkUseBrowseForFileHistory.Margin = new Padding(4, 3, 4, 3);
         chkUseBrowseForFileHistory.Name = "chkUseBrowseForFileHistory";
@@ -130,7 +130,7 @@ partial class FormBrowseRepoSettingsPage
         chkUseDiffViewerForBlame.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         chkUseDiffViewerForBlame.Checked = false;
         chkUseDiffViewerForBlame.Dock = DockStyle.Fill;
-        chkUseDiffViewerForBlame.Location = new Point(4, 55);
+        chkUseDiffViewerForBlame.Location = new Point(4, 82);
         chkUseDiffViewerForBlame.ManualSectionAnchorName = "general-show-blame-in-diff-view";
         chkUseDiffViewerForBlame.Margin = new Padding(4, 3, 4, 3);
         chkUseDiffViewerForBlame.Name = "chkUseDiffViewerForBlame";
@@ -146,7 +146,7 @@ partial class FormBrowseRepoSettingsPage
         chkShowFindInCommitFilesGitGrep.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         chkShowFindInCommitFilesGitGrep.Checked = false;
         chkShowFindInCommitFilesGitGrep.Dock = DockStyle.Fill;
-        chkShowFindInCommitFilesGitGrep.Location = new Point(4, 80);
+        chkShowFindInCommitFilesGitGrep.Location = new Point(4, 107);
         chkShowFindInCommitFilesGitGrep.ManualSectionAnchorName = null;
         chkShowFindInCommitFilesGitGrep.Margin = new Padding(4, 3, 4, 3);
         chkShowFindInCommitFilesGitGrep.Name = "chkShowFindInCommitFilesGitGrep";
@@ -162,7 +162,7 @@ partial class FormBrowseRepoSettingsPage
         chkShowRevisionGridTooltip.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         chkShowRevisionGridTooltip.Checked = false;
         chkShowRevisionGridTooltip.Dock = DockStyle.Fill;
-        chkShowRevisionGridTooltip.Location = new Point(4, 105);
+        chkShowRevisionGridTooltip.Location = new Point(4, 132);
         chkShowRevisionGridTooltip.ManualSectionAnchorName = "";
         chkShowRevisionGridTooltip.Margin = new Padding(4, 3, 4, 3);
         chkShowRevisionGridTooltip.Name = "chkShowRevisionGridTooltip";
@@ -227,7 +227,7 @@ partial class FormBrowseRepoSettingsPage
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlGeneral.Size = new Size(700, 127);
+        tlpnlGeneral.Size = new Size(700, 154);
         tlpnlGeneral.TabIndex = 0;
         // 
         // gbTabs

@@ -7,6 +7,11 @@
 public static class SettingKeyString
 {
     /// <summary>
+    ///  "branch.{0}.merge"
+    /// </summary>
+    public static readonly string BranchMerge = "branch.{0}.merge";
+
+    /// <summary>
     /// "branch.{0}.remote"
     /// </summary>
     public static readonly string BranchRemote = "branch.{0}.remote";
@@ -25,6 +30,11 @@ public static class SettingKeyString
     /// "remote.{0}.color"
     /// </summary>
     public static string RemoteColor = "remote.{0}.color";
+
+    /// <summary>
+    /// "remote.{0}.prefix"
+    /// </summary>
+    public static readonly string RemotePrefix = "remote.{0}.prefix";
 
     /// <summary>
     /// "remote.{0}.push"

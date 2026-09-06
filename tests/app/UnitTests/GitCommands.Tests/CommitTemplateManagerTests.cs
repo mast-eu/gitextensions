@@ -1,23 +1,20 @@
-using System.Collections;
+﻿using System.Collections;
 using System.IO.Abstractions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class CommitTemplateManagerTests
 {
     private readonly string _workingDir = @"c:\dev\repo";
-    private IGitModule _module;
-    private FileBase _file;
-    private IFileSystem _fileSystem;
-    private IFullPathResolver _fullPathResolver;
-    private CommitTemplateManager _manager;
+    private IGitModule _module = null!;
+    private FileBase _file = null!;
+    private IFileSystem _fileSystem = null!;
+    private IFullPathResolver _fullPathResolver = null!;
+    private CommitTemplateManager _manager = null!;
 
     [SetUp]
     public void Setup()
@@ -34,7 +31,7 @@ public class CommitTemplateManagerTests
 
     [TestCase(null)]
     [TestCase("")]
-    public void LoadGitCommitTemplate_commit_template_not_defined(string template)
+    public void LoadGitCommitTemplate_commit_template_not_defined(string? template)
     {
         _module.GetEffectiveSetting("commit.template").Returns(template);
 
@@ -44,7 +41,7 @@ public class CommitTemplateManagerTests
     [TestCase("~/template.txt")]
     [TestCase("./template.txt")]
     [TestCase("template.txt")]
-    public void LoadGitCommitTemplate_should_throw_if_template_not_found(string template)
+    public void LoadGitCommitTemplate_should_throw_if_template_not_found(string? template)
     {
         _module.WorkingDir.Returns(_workingDir);
         _module.GetEffectiveSetting("commit.template").Returns(template);
@@ -64,7 +61,7 @@ public class CommitTemplateManagerTests
         _file.Exists(fullPath).Returns(true);
         _file.ReadAllText(fullPath).Returns("line1");
 
-        string content = _manager.LoadGitCommitTemplate();
+        string? content = _manager.LoadGitCommitTemplate();
 
         content.Should().NotBeEmpty();
     }
@@ -132,7 +129,7 @@ public class CommitTemplateManagerTests
             helper.Module.SetSetting("commit.template", "template.txt");
             helper.CreateRepoFile("template.txt", content);
 
-            string body = manager.LoadGitCommitTemplate();
+            string? body = manager.LoadGitCommitTemplate();
 
             body.Should().Be(content);
         }

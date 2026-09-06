@@ -17,7 +17,7 @@ public static partial class UserEnvironmentInformation
     private static bool _dirty;
     private static string? _sha;
 
-    [GeneratedRegex(@"^Microsoft\.WindowsDesktop\.App\s+([\w.-]+)\s+.*$", RegexOptions.Multiline)]
+    [GeneratedRegex(@"^Microsoft\.WindowsDesktop\.App\s+(?<version>[\w.-]+)\s+.*$", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
     private static partial Regex DesktopAppRegex { get; }
     [GeneratedRegex(@"^", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
     private static partial Regex LineStartRegex { get; }
@@ -46,13 +46,13 @@ public static partial class UserEnvironmentInformation
         // Build and open FormAbout design to make sure info still looks good if you change this code.
         StringBuilder sb = new();
 
-        sb.AppendLine($"- Git Extensions {AppSettings.ProductVersion}");
-        sb.AppendLine($"- Build {_sha}{(_dirty ? " (Dirty)" : "")}");
-        sb.AppendLine($"- Git {gitVersionInfo}");
-        sb.AppendLine($"- {Environment.OSVersion}");
-        sb.AppendLine($"- {RuntimeInformation.FrameworkDescription}");
-        sb.AppendLine($"- DPI {DpiUtil.DpiX}dpi ({(DpiUtil.ScaleX == 1 ? "no" : $"{Math.Round(DpiUtil.ScaleX * 100)}%")} scaling)");
-        sb.AppendLine($"- Portable: {AppSettings.IsPortable()}");
+        sb.Append("- Git Extensions ").AppendLine(AppSettings.ProductVersion);
+        sb.Append("- Build ").Append(_sha).AppendLine(_dirty ? " (Dirty)" : "");
+        sb.Append("- Git ").AppendLine(gitVersionInfo);
+        sb.Append("- ").Append(Environment.OSVersion).AppendLine();
+        sb.Append("- ").AppendLine(RuntimeInformation.FrameworkDescription);
+        sb.Append("- DPI ").Append(DpiUtil.DpiX).Append("dpi (").Append(DpiUtil.ScaleX == 1 ? "no" : $"{Math.Round(DpiUtil.ScaleX * 100)}%").AppendLine(" scaling)");
+        sb.Append("- Portable: ").Append(AppSettings.IsPortable()).AppendLine();
 
         return sb.ToString();
     }
@@ -100,7 +100,7 @@ public static partial class UserEnvironmentInformation
         try
         {
             return GetDotnetDesktopRuntimeMatches(versions)
-                .Select(match => Parse(match.Groups[1].Value))
+                .Select(match => Parse(match.Groups["version"].ValueSpan))
                 .WhereNotNull();
         }
         catch (Exception ex)
@@ -110,12 +110,17 @@ public static partial class UserEnvironmentInformation
 
         return [];
 
-        Version? Parse(string version)
+        Version? Parse(ReadOnlySpan<char> version)
         {
             try
             {
                 int suffixPos = version.IndexOf('-');
-                return new Version(suffixPos > 0 ? version[0..suffixPos] : version);
+                if (suffixPos > 0)
+                {
+                    version = version[..suffixPos];
+                }
+
+                return Version.Parse(version);
             }
             catch (Exception ex)
             {

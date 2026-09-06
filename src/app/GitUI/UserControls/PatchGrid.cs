@@ -122,7 +122,7 @@ public partial class PatchGrid : GitModuleControl
         foreach (string[] parts in commitsInfos)
         {
             string commitHash = parts[1];
-            CommitData? data = rebasedCommitsRevisions.TryGetValue(commitHash, out GitRevision commitRevision)
+            CommitData? data = rebasedCommitsRevisions.TryGetValue(commitHash, out GitRevision? commitRevision)
                 ? _commitDataManager.CreateFromRevision(commitRevision, null)
                 : _commitDataManager.GetCommitData(commitHash);
 
@@ -248,7 +248,7 @@ public partial class PatchGrid : GitModuleControl
                     else if (string.IsNullOrWhiteSpace(line) || m.Success)
                     {
                         // decode QuotedPrintable text using .NET internal decoder
-                        value = Attachment.CreateAttachmentFromString("", value).Name;
+                        value = Attachment.CreateAttachmentFromString("", value).Name!;
                         switch (key)
                         {
                             case "From":
@@ -287,7 +287,7 @@ public partial class PatchGrid : GitModuleControl
                     }
                     else if (!string.IsNullOrEmpty(line))
                     {
-                        value = AppendQuotedString(value, line.Trim());
+                        value = AppendQuotedString(value, line.Trim())!;
                     }
 
                     if (string.IsNullOrEmpty(line) ||
@@ -315,7 +315,7 @@ public partial class PatchGrid : GitModuleControl
             }
 
             DebugHelpers.Assert(m1.Groups["qr1"].Value == m2.Groups["qr1"].Value, @"m1.Groups[""qr1""].Value == m2.Groups[""qr2""].Value");
-            return str1[..^2] + m2.Groups["qr2"].Value + "?=";
+            return $"{str1.AsSpan()[..^2]}{m2.Groups["qr2"].ValueSpan}?=";
         }
     }
 
@@ -340,7 +340,7 @@ public partial class PatchGrid : GitModuleControl
         Validates.NotNull(PatchFiles);
 
         IReadOnlyList<PatchFile> updatedPatches = GetPatches();
-        if (updatedPatches.Count != PatchFiles.Count)
+        if (updatedPatches.Count != PatchFiles.Count && !_isManagingRebase)
         {
             // Fail for popup in Debug
             string s = $"PatchGrid: RefreshGrid: PatchFiles count {PatchFiles.Count} is different from updatedPatches count {updatedPatches.Count}. This should not happen.";
@@ -369,7 +369,7 @@ public partial class PatchGrid : GitModuleControl
         {
             Patches.ClearSelection();
             DataGridViewRow dataGridViewRow = Patches.Rows[shouldSelectIndex];
-            dataGridViewRow.DefaultCellStyle.ForeColor = Color.OrangeRed.AdaptTextColor();
+            dataGridViewRow.DefaultCellStyle.ForeColor = Color.OrangeRed.AdaptForeColor(dataGridViewRow.InheritedStyle.BackColor);
             dataGridViewRow.Selected = true;
         }
     }
@@ -395,18 +395,18 @@ public partial class PatchGrid : GitModuleControl
             return;
         }
 
-        PatchFile patchFile = (PatchFile)Patches.SelectedRows[0].DataBoundItem;
+        PatchFile? patchFile = (PatchFile?)Patches.SelectedRows[0].DataBoundItem;
 
-        if (patchFile?.ObjectId?.IsArtificial is false)
+        if (patchFile?.ObjectId is { IsZeroOrArtificial: false } patchObjectId)
         {
             // Normal commit selected
-            UICommands.StartFormCommitDiff(patchFile.ObjectId);
+            UICommands.StartFormCommitDiff(patchObjectId);
             return;
         }
 
-        if (string.IsNullOrEmpty(patchFile.FullName))
+        if (string.IsNullOrEmpty(patchFile!.FullName))
         {
-            MessageBox.Show(_unableToShowPatchDetails.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(_unableToShowPatchDetails.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 

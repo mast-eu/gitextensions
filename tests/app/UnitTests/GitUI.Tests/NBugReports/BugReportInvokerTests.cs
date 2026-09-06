@@ -1,15 +1,12 @@
 ﻿using System.Collections;
 using System.Text;
-using FluentAssertions;
 using GitExtensions.Extensibility;
 using GitUI.NBugReports;
 
 namespace GitUITests.NBugReports;
-
-[TestFixture]
 public sealed class BugReportInvokerTests
 {
-    [Test, TestCaseSource(typeof(TestExceptions), "TestCases")]
+    [Test, TestCaseSource(typeof(TestExceptions), nameof(TestExceptions.TestCases))]
     public void Append(Exception exception, string expectedRootError, string expectedText)
     {
         StringBuilder text = exception.GetExceptionInfo();
@@ -82,7 +79,7 @@ public class TestExceptions
                 + $"Command: {_command}{Environment.NewLine}"
                 + $"Arguments: {_arguments}{Environment.NewLine}"
                 + $"Working directory: {_directory}{Environment.NewLine}");
-            yield return new TestCaseData(new UserExternalOperationException(context: null,
+            yield return new TestCaseData(new UserExternalOperationException(context: null!,
                 new ExternalOperationException(null, null, null, null, new Exception(_messageInner))),
                 _messageInner,
                 "");

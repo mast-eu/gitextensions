@@ -1,6 +1,465 @@
 ﻿Changelog
 =========
 
+### Version v7.2.1 (18 Aug 2026)
+
+#### Changes:
+* [#13238] fix(TextAreaControl): measure glyph width
+* [#13236] feat(issue-triage): close legacy runtime loading reports
+* [#13234] feat(plugins): validate compatibility on load
+* [#13230] fix(scripts): avoid crash by outdated plugins
+* [#13225] fix(bug reporter): remove wrong configuration
+* [#13221] feat(cross-platform): add names of diff/merge tools
+* [#13219] fix(push reject): ignore ANSI escape sequences
+* [#13214] fix: three cross-platform fixes for HOME, the avatar cache path and meld
+* [#13210] ci(pr-automation): set appropriate permissions for updating PRs
+* [#13209] fix(cancellation): Pass cancellation tokens to awaited tasks
+* [#13206] fix(push button): restore color if not behind
+* [#13203] perf(clone): choose Windows / WSL git according to destination directory
+* [#13199] Limit reset check to scope of documentation to "not loose commits"
+* [#13182] ci: only clear no-recent-activity label on author response
+* [#13180] fix(worktree): normalise new branch name and offer to switch after create
+* [#13174] Preserve anchored repositories when trimming recent repository history
+* [#13168] Push ShellProvider into DI
+* [#13165] docs: add DAG (Docs-Augmented Generation) agent documentation
+* [#13163] feat(confirmations): Add in-dialog "Don't show again" checkbox
+* [#13116] ci: harden build workflow and fix test-report gating
+* [#13103] fix-issue-12926-camel-humps-1865650694615130258
+* [#12985] chore(rebase): Bypass false debug assertion
+
+
+[#13238]:https://github.com/gitextensions/gitextensions/pull/13238
+[#13236]:https://github.com/gitextensions/gitextensions/pull/13236
+[#13234]:https://github.com/gitextensions/gitextensions/pull/13234
+[#13230]:https://github.com/gitextensions/gitextensions/pull/13230
+[#13225]:https://github.com/gitextensions/gitextensions/pull/13225
+[#13221]:https://github.com/gitextensions/gitextensions/pull/13221
+[#13219]:https://github.com/gitextensions/gitextensions/pull/13219
+[#13214]:https://github.com/gitextensions/gitextensions/pull/13214
+[#13210]:https://github.com/gitextensions/gitextensions/pull/13210
+[#13209]:https://github.com/gitextensions/gitextensions/pull/13209
+[#13206]:https://github.com/gitextensions/gitextensions/pull/13206
+[#13203]:https://github.com/gitextensions/gitextensions/pull/13203
+[#13199]:https://github.com/gitextensions/gitextensions/pull/13199
+[#13182]:https://github.com/gitextensions/gitextensions/pull/13182
+[#13180]:https://github.com/gitextensions/gitextensions/pull/13180
+[#13174]:https://github.com/gitextensions/gitextensions/pull/13174
+[#13168]:https://github.com/gitextensions/gitextensions/pull/13168
+[#13165]:https://github.com/gitextensions/gitextensions/pull/13165
+[#13163]:https://github.com/gitextensions/gitextensions/pull/13163
+[#13116]:https://github.com/gitextensions/gitextensions/pull/13116
+[#13103]:https://github.com/gitextensions/gitextensions/pull/13103
+[#12985]:https://github.com/gitextensions/gitextensions/pull/12985
+
+
+### Version v7.2.0 (10 Jul 2026)
+
+#### Changes:
+* [#13159] fix: unblock UI thread while awaiting merge tool
+* [#13158] perf: make classes sealed
+* [#13154] fix(ISetting): read and store bool in lowercase
+* [#13150] ci(cla-check): Reject "noreply" email
+* [#13148] Do not show merge commit editor when there are no errors
+* [#13147] feat(.gitignore): Support single selected folder
+* [#13145] Fix unhandled exception when selecting non-TrueType font in Appearance settings
+* [#13143] fix: checkout branch --track
+* [#13139] Avoid some string allocations, plus some collection tweaks
+* [#13138] fix(Reset changes): Restrict to working dir
+* [#13137] feat(RevisionGrid): Preview amend on Ctrl+click
+* [#13135] build(translation): Verify Transifex base files
+* [#13134] fix: dispose Process handles
+* [#13133] feat(RevisionGrid): Improve label hover hit-test
+* [#13129] fix(FormCommit): Avoid empty diff on multi-selection
+* [#13117] fix: remove unused UxTheme native methods
+* [#13104] feat(RevisionGrid): Draw ahead/behind info; adapt tag shape
+* [#13064] feat: hide fetch-all UI when there is only one remote
+
+
+[#13159]:https://github.com/gitextensions/gitextensions/pull/13159
+[#13158]:https://github.com/gitextensions/gitextensions/pull/13158
+[#13154]:https://github.com/gitextensions/gitextensions/pull/13154
+[#13150]:https://github.com/gitextensions/gitextensions/pull/13150
+[#13148]:https://github.com/gitextensions/gitextensions/pull/13148
+[#13147]:https://github.com/gitextensions/gitextensions/pull/13147
+[#13145]:https://github.com/gitextensions/gitextensions/pull/13145
+[#13143]:https://github.com/gitextensions/gitextensions/pull/13143
+[#13139]:https://github.com/gitextensions/gitextensions/pull/13139
+[#13138]:https://github.com/gitextensions/gitextensions/pull/13138
+[#13137]:https://github.com/gitextensions/gitextensions/pull/13137
+[#13135]:https://github.com/gitextensions/gitextensions/pull/13135
+[#13134]:https://github.com/gitextensions/gitextensions/pull/13134
+[#13133]:https://github.com/gitextensions/gitextensions/pull/13133
+[#13129]:https://github.com/gitextensions/gitextensions/pull/13129
+[#13117]:https://github.com/gitextensions/gitextensions/pull/13117
+[#13104]:https://github.com/gitextensions/gitextensions/pull/13104
+[#13064]:https://github.com/gitextensions/gitextensions/pull/13064
+
+
+### Version v7.1.0 (14 Jun 2026)
+
+#### Changes:
+* [#13115] ci: convert FabricBot automation to GitHub Actions
+* [#13114] ci: add CLA sign-off check workflow for pull requests
+* [#13111] fix: copilot to mention extensibility changes in reviews
+* [#13108] Avoid some heap allocations
+* [#13107] Make private & internal classes sealed, plus some collection tweaks
+* [#13095] feat(FormFixHome): Detect alternative global git config
+* [#13035] Implement Mintty console emulator support
+
+
+[#13115]:https://github.com/gitextensions/gitextensions/pull/13115
+[#13114]:https://github.com/gitextensions/gitextensions/pull/13114
+[#13111]:https://github.com/gitextensions/gitextensions/pull/13111
+[#13108]:https://github.com/gitextensions/gitextensions/pull/13108
+[#13107]:https://github.com/gitextensions/gitextensions/pull/13107
+[#13095]:https://github.com/gitextensions/gitextensions/pull/13095
+[#13035]:https://github.com/gitextensions/gitextensions/pull/13035
+
+
+### Version v7.0.1 (31 May 2026)
+
+#### Changes:
+* [#13090] fix(SubmoduleHelpers): Support quoted filenames
+* [#13087] fix(StartFileHistoryDialog): Add missing call
+* [#13084] refactor(AppSettings): Replace dynamic type coercion with baked-in converters
+* [#13049] Optimized StringBuilder usage
+
+
+[#13090]:https://github.com/gitextensions/gitextensions/pull/13090
+[#13087]:https://github.com/gitextensions/gitextensions/pull/13087
+[#13084]:https://github.com/gitextensions/gitextensions/pull/13084
+[#13049]:https://github.com/gitextensions/gitextensions/pull/13049
+
+
+### Version v7.0.0 (25 May 2026)
+
+#### Changes:
+* [#13081] fix(StartFileHistoryDialog): Avoid error popup
+* [#13080] fix(create repo): Pass ServiceProvider
+* [#13077] Fix regex pattern for rejected push detection
+* [#13075] feat: "Reset Changes" and "Commit" working directory context menu (#9…
+* [#13074] fix(remote branch prefix): Allow trailing slash
+* [#13073] fix: Use ReadUnaligned for IsArtificial
+* [#13072] fix(save selected as): Support top-level files
+* [#13062] refactor: Remove nullability of ISetting<T>.Value
+* [#13061] ci: Enable display of test errors
+* [#13058] perf(ObjectId): convert from sealed class to readonly struct
+* [#13057] fix(FileStatusList): Avoid filename truncation to empty
+* [#13054] fix(set_version_to.cs): Add shebang
+* [#13053] perf: Optimize StringBuilder usage
+* [#13048] chore: Remove unused parts of ISetting<T>
+* [#13047] fix: Fixup substition of startIndex by means of slicing
+* [#13046] perf(text editor): Avoid string allocations
+* [#13045] fix(git config): Do not throw on multiple values when not changed
+* [#13044] Removed unneeded Dictionary lookups
+* [#13041]  Use SearchValues to find indexes of chars
+* [#13040] fix(FormPush): Invalidate git config
+* [#13038] feat(revision grid): Condense remote labels
+* [#13037] fix(repo menu): Actually update on revisions loaded
+* [#13034] feat(interactive ref labels): Improve UX
+* [#13032] feat: tooltip for submodules in the left panel
+* [#13031] fix: Make layered settings work
+* [#13027] Adopt fore colors
+* [#13024] Clean console emulation interface
+* [#13019] feat: Compact single-child folder chains in submodule tree
+* [#13018] ci: Upload test reports on failure
+* [#13016] fix: quiet git-reset
+* [#13015] fix: ShowError MessageBoxes in plugins
+* [#13014] feat(view settings): Add button "save as default"  to "diff viewer" settings page
+* [#13009] fix(user scripts): Always provide internal items
+* [#13001] feat(worktree): strip common directory prefix from worktree display names
+* [#12999] feat: auto-detect Azure DevOps for build status and PR creation
+* [#12998] chore: Update ICSharpCode.TextEditor submodule (syntax highlighting for .slnx, .vsconfig, .slnf)
+* [#12997] feat: add Copy path and Show in folder to worktree context menu
+* [#12996] feat(UI): add Shift+MouseWheel horizontal scrolling
+* [#12995] ci: name portable artifact with version and commit hash
+* [#12993] ci: add workflow_run test report for fork PRs
+* [#12992] Allow to have console emulator plugins
+* [#12991] feat(interactive ref labels): Improve UX
+* [#12990] fix(file tree): Avoid split folder
+* [#12989] Allow preconfigure prefix and colour per remote
+* [#12987] refactor: convert JoinableTaskFactory.Run tests to async Task
+* [#12986] ci: exclude test code from SonarQube analysis
+* [#12984] fix(commit):fix hideous resize of status bar when staging
+* [#12983] ci: publish portable archive artifact from GHA workflow
+* [#12982] refactor: modernize test assertions and infrastructure
+* [#12980] feat: scroll revision grid to worktree commit on selection
+* [#12979] ci: avoid duplicate runs on PR branches
+* [#12978] perf(ObjectId): use InlineArray buffer with SIMD operations and vectorized hex conversion
+* [#12976] docs: Fix .NET 10 download link and Windows version requirement in README
+* [#12974] feat(GetSelectedBranch): Reduce noise on WSL failure
+* [#12973] fix!: worktree with Git < 2.36
+* [#12971] perf(ObjectId): use SkipLocalsInit and SearchValues for hex validation
+* [#12970] perf: add ExplicitCapture to regex options where missing
+* [#12969] refactor: remove redundant IExecutable.GetWorkingDirectory() method
+* [#12964] perf: use Path.Join over Path.Combine for known-relative path segments
+* [#12962] feat: handle worktree branches in delete branch dialog
+* [#12961] build: replace FluentAssertions NuGet package with AwesomeAssertions
+* [#12960] fix(test): fix flaky CancellationTokenSequence concurrency test
+* [#12958] chore: remove dead .NET Framework app.config content
+* [#12957] Migrate from Newtonsoft.Json to System.Text.Json
+* [#12956] refactor: replace EnvUtils methods with modern .NET framework equivalents
+* [#12955] refactor: remove dead BinaryFormatter-era serialization code
+* [#12954] refactor: replace StringPool with HashSet alternate lookup for string deduplication
+* [#12953] feat: hide Copilot session checkpoint refs by default
+* [#12952] chore: Null-annotate the whole repo
+* [#12951] feat: add interactive ref labels in revision grid
+* [#12950] fix: auto-match console style to application theme
+* [#12949] chore: add .git-blame-ignore-revs for bulk formatting commits
+* [#12948] feat: Add GitHub Actions build server integration
+* [#12947] Repalce 13rac1/block-fixup-merge-action
+* [#12946] ci: replace AppVeyor with GitHub Actions
+* [#12945] refactor: ban direct MessageBox usage via BannedApiAnalyzers
+* [#12944] build: migrate solution from sln to slnx format
+* [#12943] fix: dark+ update
+* [#12942] feat: tweaked ansi terminal colors
+* [#12941] feat: themeable selection color
+* [#12939] Update SourceLink to fix worktrees in this repo
+* [#12938] fix(TextBoxSilencer): Allow Ctrl+Home/End to navigate to document boundaries
+* [#12937] fix(repo menu): Display hotkeys again
+* [#12936] fix(RevisionGrid): Hide tooltip on app deactivate
+* [#12934] feat(editor): add Zed editor as git editor
+* [#12933] refactor(IGitExecutor): Remove GetSelectedBranch
+* [#12929] fix: nullable ThreadHelper
+* [#12928] fix: load Dashboard once
+* [#12927] feat: add Worktrees to toolbar and navigation tree
+* [#12922] feat(git config): Improve message on unexpected multi-value config
+* [#12921] Repo menu opening
+* [#12920] fix(RegisterPlugins): Perfom using _loadOperations
+* [#12919] fix(EditboxBasedConsoleOutputControl): Avoid NRE
+* [#12915] feat(repo button): Mention Ctrl in tooltip
+* [#12910] build: remove obsolete BitBucket plugin
+* [#12909] fix(output history): Ensure collapsed panels if disabled after showing as panel
+* [#12908] feat(PluginSettingsPage): Add state to exception
+* [#12895] fix remove JiraCommitHintPlugin
+* [#12894] fix: remove obsolete GitFlow plugin
+* [#12893] fix: git 2.53
+* [#12892] fix: gource DownloadFile
+* [#12890] feat(RevisionGridControl): Add tsmiPushBranch
+* [#12877] Copilot UI design guidelines
+* [#12875] Dialogs layout alignment - `FormCreateWorktree`
+* [#12874] fix: prevent initial watermark when control starts focused
+* [#12872] feat(portable): Pinnable to taskbar per folder
+* [#12871] Tests for OsShellUtil
+* [#12869] feat(recent repo list): Improve readability
+* [#12864] Fix/sq warnings
+* [#12863] feat: Add scripts lf/crlf conversion
+* [#12861] feat(FormBrowse): Automatically load body & notes
+* [#12860] refactor `BugReportInvoker` to make it testable
+* [#12859] Allow to disable tooltips in revision grid
+* [#12858] fix(PathFirstComparer): Use InvariantCulture consistently
+* [#12852] fix(dashboard): focus search on start
+* [#12850] feat(BugReportInvoker): Ignore missing runtime DLL on application exit and if repeated
+* [#12841] Fix: Console launch fails when Windows username contains spaces
+* [#12840] feat(user scripts): Support selected folder for "{SelectedRelativePaths}"
+* [#12839] feat(user scripts): Add example for editor integration
+* [#12837] fix: difftool second revision
+* [#12827] feat(update): Adapt download link to OSArchitecture
+* [#12818] fix(FileViewer): Scrollbar visibility & scroll to
+* [#12817] fix(Reset changes): Limit size of popup
+* [#12815] fix(show skip-worktree): Make mnemonic unique
+* [#12811] feat(HotkeySettingsManager): Default hotkeys for GoToFirst/LastParent
+* [#12810] feat(file multi-selection): Display focused file, not nothing
+* [#12806] feat(file encoding): Selectable per file
+* [#12805] feat(assembly loading error): Also detect if wrapped with other exceptions
+* [#12780] Fix statistics plugin not showing line counts
+* [#12778] ci: Build release for x64 and arm64 using GitHub Actions
+* [#12772] Enhances the 'remote repositories' window
+* [#12768] fix: Consistent capitalization of folder "setup"
+* [#12764] style: property for GeneratedRegex
+* [#12763] feat(git-grep): Add regex options to toolbar
+* [#12762] fix: VSTHRD103: Call async methods when in an async method
+* [#12761] Code analysis fixes
+* [#12759] feat(user scripts): Replace all supported arguments always
+* [#12758] fix: ResolveConflicts dialog for choose version
+* [#12757] style(.editorconfig): Add charset = utf-8-bom
+* [#12750] chore: Handle GDI exception in FileStatusListView_DrawNode
+* [#12749] feat(skip-worktree files): Show in Diff tab, show diff
+* [#12745] fix(git status): Update after special rebase
+* [#12740] feat(FormCommit): Make auto-selection of staged optional
+* [#12735] feat(settings): Mention and show env var GIT_CONFIG_GLOBAL
+* [#12734] feat(user scripts): Add argument "{ColumnNumber}"
+* [#12733] fix(PictureBox.OnPaint): Handle exceptions
+* [#12731] fix(FindNextOrOpenWithDifftool): Show "Text not found"
+* [#12730] feat: Add Notes column
+* [#12723] fix: GitGrep toolbar options
+* [#12722] fix(FormCommit): update status for dirty unstaged submodules
+* [#12718] feat(theme): follow Windows app color mode
+* [#12717] fix(RevisionGridControl): NRE on special stashes
+* [#12705] feat(RevisionGraph): Show single child in tooltip
+* [#12703] chore(SettingsPageBase): Remove unused bindings
+* [#12660] feat(repos dropdown): Allow to filter the recent repos
+* [#12659] Show branch name in dashboard and menus for reftable repos
+* [#12647] cleanup  changing GitExtensions.Extensibility
+* [#12596] Add recent repositories to Windows Start menu jump list
+* [#12515] feat!: .net10
+* [#12478] Dynamic commit message template
+* [#12367] Add ComboBoxWatermarkManager for control of ComboBox watermark text
+
+
+[#13081]:https://github.com/gitextensions/gitextensions/pull/13081
+[#13080]:https://github.com/gitextensions/gitextensions/pull/13080
+[#13077]:https://github.com/gitextensions/gitextensions/pull/13077
+[#13075]:https://github.com/gitextensions/gitextensions/pull/13075
+[#13074]:https://github.com/gitextensions/gitextensions/pull/13074
+[#13073]:https://github.com/gitextensions/gitextensions/pull/13073
+[#13072]:https://github.com/gitextensions/gitextensions/pull/13072
+[#13062]:https://github.com/gitextensions/gitextensions/pull/13062
+[#13061]:https://github.com/gitextensions/gitextensions/pull/13061
+[#13058]:https://github.com/gitextensions/gitextensions/pull/13058
+[#13057]:https://github.com/gitextensions/gitextensions/pull/13057
+[#13054]:https://github.com/gitextensions/gitextensions/pull/13054
+[#13053]:https://github.com/gitextensions/gitextensions/pull/13053
+[#13048]:https://github.com/gitextensions/gitextensions/pull/13048
+[#13047]:https://github.com/gitextensions/gitextensions/pull/13047
+[#13046]:https://github.com/gitextensions/gitextensions/pull/13046
+[#13045]:https://github.com/gitextensions/gitextensions/pull/13045
+[#13044]:https://github.com/gitextensions/gitextensions/pull/13044
+[#13041]:https://github.com/gitextensions/gitextensions/pull/13041
+[#13040]:https://github.com/gitextensions/gitextensions/pull/13040
+[#13038]:https://github.com/gitextensions/gitextensions/pull/13038
+[#13037]:https://github.com/gitextensions/gitextensions/pull/13037
+[#13034]:https://github.com/gitextensions/gitextensions/pull/13034
+[#13032]:https://github.com/gitextensions/gitextensions/pull/13032
+[#13031]:https://github.com/gitextensions/gitextensions/pull/13031
+[#13027]:https://github.com/gitextensions/gitextensions/pull/13027
+[#13024]:https://github.com/gitextensions/gitextensions/pull/13024
+[#13019]:https://github.com/gitextensions/gitextensions/pull/13019
+[#13018]:https://github.com/gitextensions/gitextensions/pull/13018
+[#13016]:https://github.com/gitextensions/gitextensions/pull/13016
+[#13015]:https://github.com/gitextensions/gitextensions/pull/13015
+[#13014]:https://github.com/gitextensions/gitextensions/pull/13014
+[#13009]:https://github.com/gitextensions/gitextensions/pull/13009
+[#13001]:https://github.com/gitextensions/gitextensions/pull/13001
+[#12999]:https://github.com/gitextensions/gitextensions/pull/12999
+[#12998]:https://github.com/gitextensions/gitextensions/pull/12998
+[#12997]:https://github.com/gitextensions/gitextensions/pull/12997
+[#12996]:https://github.com/gitextensions/gitextensions/pull/12996
+[#12995]:https://github.com/gitextensions/gitextensions/pull/12995
+[#12993]:https://github.com/gitextensions/gitextensions/pull/12993
+[#12992]:https://github.com/gitextensions/gitextensions/pull/12992
+[#12991]:https://github.com/gitextensions/gitextensions/pull/12991
+[#12990]:https://github.com/gitextensions/gitextensions/pull/12990
+[#12989]:https://github.com/gitextensions/gitextensions/pull/12989
+[#12987]:https://github.com/gitextensions/gitextensions/pull/12987
+[#12986]:https://github.com/gitextensions/gitextensions/pull/12986
+[#12984]:https://github.com/gitextensions/gitextensions/pull/12984
+[#12983]:https://github.com/gitextensions/gitextensions/pull/12983
+[#12982]:https://github.com/gitextensions/gitextensions/pull/12982
+[#12980]:https://github.com/gitextensions/gitextensions/pull/12980
+[#12979]:https://github.com/gitextensions/gitextensions/pull/12979
+[#12978]:https://github.com/gitextensions/gitextensions/pull/12978
+[#12976]:https://github.com/gitextensions/gitextensions/pull/12976
+[#12974]:https://github.com/gitextensions/gitextensions/pull/12974
+[#12973]:https://github.com/gitextensions/gitextensions/pull/12973
+[#12971]:https://github.com/gitextensions/gitextensions/pull/12971
+[#12970]:https://github.com/gitextensions/gitextensions/pull/12970
+[#12969]:https://github.com/gitextensions/gitextensions/pull/12969
+[#12964]:https://github.com/gitextensions/gitextensions/pull/12964
+[#12962]:https://github.com/gitextensions/gitextensions/pull/12962
+[#12961]:https://github.com/gitextensions/gitextensions/pull/12961
+[#12960]:https://github.com/gitextensions/gitextensions/pull/12960
+[#12958]:https://github.com/gitextensions/gitextensions/pull/12958
+[#12957]:https://github.com/gitextensions/gitextensions/pull/12957
+[#12956]:https://github.com/gitextensions/gitextensions/pull/12956
+[#12955]:https://github.com/gitextensions/gitextensions/pull/12955
+[#12954]:https://github.com/gitextensions/gitextensions/pull/12954
+[#12953]:https://github.com/gitextensions/gitextensions/pull/12953
+[#12952]:https://github.com/gitextensions/gitextensions/pull/12952
+[#12951]:https://github.com/gitextensions/gitextensions/pull/12951
+[#12950]:https://github.com/gitextensions/gitextensions/pull/12950
+[#12949]:https://github.com/gitextensions/gitextensions/pull/12949
+[#12948]:https://github.com/gitextensions/gitextensions/pull/12948
+[#12947]:https://github.com/gitextensions/gitextensions/pull/12947
+[#12946]:https://github.com/gitextensions/gitextensions/pull/12946
+[#12945]:https://github.com/gitextensions/gitextensions/pull/12945
+[#12944]:https://github.com/gitextensions/gitextensions/pull/12944
+[#12943]:https://github.com/gitextensions/gitextensions/pull/12943
+[#12942]:https://github.com/gitextensions/gitextensions/pull/12942
+[#12941]:https://github.com/gitextensions/gitextensions/pull/12941
+[#12939]:https://github.com/gitextensions/gitextensions/pull/12939
+[#12938]:https://github.com/gitextensions/gitextensions/pull/12938
+[#12937]:https://github.com/gitextensions/gitextensions/pull/12937
+[#12936]:https://github.com/gitextensions/gitextensions/pull/12936
+[#12934]:https://github.com/gitextensions/gitextensions/pull/12934
+[#12933]:https://github.com/gitextensions/gitextensions/pull/12933
+[#12929]:https://github.com/gitextensions/gitextensions/pull/12929
+[#12928]:https://github.com/gitextensions/gitextensions/pull/12928
+[#12927]:https://github.com/gitextensions/gitextensions/pull/12927
+[#12922]:https://github.com/gitextensions/gitextensions/pull/12922
+[#12921]:https://github.com/gitextensions/gitextensions/pull/12921
+[#12920]:https://github.com/gitextensions/gitextensions/pull/12920
+[#12919]:https://github.com/gitextensions/gitextensions/pull/12919
+[#12915]:https://github.com/gitextensions/gitextensions/pull/12915
+[#12910]:https://github.com/gitextensions/gitextensions/pull/12910
+[#12909]:https://github.com/gitextensions/gitextensions/pull/12909
+[#12908]:https://github.com/gitextensions/gitextensions/pull/12908
+[#12895]:https://github.com/gitextensions/gitextensions/pull/12895
+[#12894]:https://github.com/gitextensions/gitextensions/pull/12894
+[#12893]:https://github.com/gitextensions/gitextensions/pull/12893
+[#12892]:https://github.com/gitextensions/gitextensions/pull/12892
+[#12890]:https://github.com/gitextensions/gitextensions/pull/12890
+[#12877]:https://github.com/gitextensions/gitextensions/pull/12877
+[#12875]:https://github.com/gitextensions/gitextensions/pull/12875
+[#12874]:https://github.com/gitextensions/gitextensions/pull/12874
+[#12872]:https://github.com/gitextensions/gitextensions/pull/12872
+[#12871]:https://github.com/gitextensions/gitextensions/pull/12871
+[#12869]:https://github.com/gitextensions/gitextensions/pull/12869
+[#12864]:https://github.com/gitextensions/gitextensions/pull/12864
+[#12863]:https://github.com/gitextensions/gitextensions/pull/12863
+[#12861]:https://github.com/gitextensions/gitextensions/pull/12861
+[#12860]:https://github.com/gitextensions/gitextensions/pull/12860
+[#12859]:https://github.com/gitextensions/gitextensions/pull/12859
+[#12858]:https://github.com/gitextensions/gitextensions/pull/12858
+[#12852]:https://github.com/gitextensions/gitextensions/pull/12852
+[#12850]:https://github.com/gitextensions/gitextensions/pull/12850
+[#12841]:https://github.com/gitextensions/gitextensions/pull/12841
+[#12840]:https://github.com/gitextensions/gitextensions/pull/12840
+[#12839]:https://github.com/gitextensions/gitextensions/pull/12839
+[#12837]:https://github.com/gitextensions/gitextensions/pull/12837
+[#12827]:https://github.com/gitextensions/gitextensions/pull/12827
+[#12818]:https://github.com/gitextensions/gitextensions/pull/12818
+[#12817]:https://github.com/gitextensions/gitextensions/pull/12817
+[#12815]:https://github.com/gitextensions/gitextensions/pull/12815
+[#12811]:https://github.com/gitextensions/gitextensions/pull/12811
+[#12810]:https://github.com/gitextensions/gitextensions/pull/12810
+[#12806]:https://github.com/gitextensions/gitextensions/pull/12806
+[#12805]:https://github.com/gitextensions/gitextensions/pull/12805
+[#12780]:https://github.com/gitextensions/gitextensions/pull/12780
+[#12778]:https://github.com/gitextensions/gitextensions/pull/12778
+[#12772]:https://github.com/gitextensions/gitextensions/pull/12772
+[#12768]:https://github.com/gitextensions/gitextensions/pull/12768
+[#12764]:https://github.com/gitextensions/gitextensions/pull/12764
+[#12763]:https://github.com/gitextensions/gitextensions/pull/12763
+[#12762]:https://github.com/gitextensions/gitextensions/pull/12762
+[#12761]:https://github.com/gitextensions/gitextensions/pull/12761
+[#12759]:https://github.com/gitextensions/gitextensions/pull/12759
+[#12758]:https://github.com/gitextensions/gitextensions/pull/12758
+[#12757]:https://github.com/gitextensions/gitextensions/pull/12757
+[#12750]:https://github.com/gitextensions/gitextensions/pull/12750
+[#12749]:https://github.com/gitextensions/gitextensions/pull/12749
+[#12745]:https://github.com/gitextensions/gitextensions/pull/12745
+[#12740]:https://github.com/gitextensions/gitextensions/pull/12740
+[#12735]:https://github.com/gitextensions/gitextensions/pull/12735
+[#12734]:https://github.com/gitextensions/gitextensions/pull/12734
+[#12733]:https://github.com/gitextensions/gitextensions/pull/12733
+[#12731]:https://github.com/gitextensions/gitextensions/pull/12731
+[#12730]:https://github.com/gitextensions/gitextensions/pull/12730
+[#12723]:https://github.com/gitextensions/gitextensions/pull/12723
+[#12722]:https://github.com/gitextensions/gitextensions/pull/12722
+[#12718]:https://github.com/gitextensions/gitextensions/pull/12718
+[#12717]:https://github.com/gitextensions/gitextensions/pull/12717
+[#12705]:https://github.com/gitextensions/gitextensions/pull/12705
+[#12703]:https://github.com/gitextensions/gitextensions/pull/12703
+[#12660]:https://github.com/gitextensions/gitextensions/pull/12660
+[#12659]:https://github.com/gitextensions/gitextensions/pull/12659
+[#12647]:https://github.com/gitextensions/gitextensions/pull/12647
+[#12596]:https://github.com/gitextensions/gitextensions/pull/12596
+[#12515]:https://github.com/gitextensions/gitextensions/pull/12515
+[#12478]:https://github.com/gitextensions/gitextensions/pull/12478
+[#12367]:https://github.com/gitextensions/gitextensions/pull/12367
+
+
 ### Version v6.0.5 (28 Nov 2025)
 
 #### Changes:

@@ -1,9 +1,6 @@
 ﻿using AzureDevOpsIntegration;
-using FluentAssertions;
 
 namespace AzureDevOpsIntegrationTests;
-
-[TestFixture]
 public class AzureDevOpsAdapterTests
 {
     private AzureDevOpsAdapter.TestAccessor _sut;

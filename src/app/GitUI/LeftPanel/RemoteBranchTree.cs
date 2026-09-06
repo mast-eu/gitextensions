@@ -35,7 +35,10 @@ internal sealed class RemoteBranchTree : BaseRefTree
         {
             token.ThrowIfCancellationRequested();
 
-            Validates.NotNull(branch.ObjectId);
+            if (branch.ObjectId.IsZero)
+            {
+                throw new InvalidOperationException($"Branch '{branch.Name}' has no ObjectId.");
+            }
 
             string remoteName = branch.Name.SubstringUntil('/');
             if (remoteByName.TryGetValue(remoteName, out Remote remote))
@@ -43,10 +46,10 @@ internal sealed class RemoteBranchTree : BaseRefTree
                 RemoteBranchNode remoteBranchNode = new(this, branch.ObjectId, branch.Name, visible: true);
                 if (aheadBehindData?.TryGetValue(branch.CompleteName, out AheadBehindData aheadBehind) is true)
                 {
-                    remoteBranchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), $"{GitRefName.RefsHeadsPrefix}{aheadBehind.Branch}");
+                    remoteBranchNode.UpdateAheadBehind(aheadBehind.ToDisplay(reverse: true), $"{GitRefName.RefsHeadsPrefix}{aheadBehind.Branch}");
                 }
 
-                BaseRevisionNode parent = remoteBranchNode.CreateRootNode(
+                BaseRevisionNode? parent = remoteBranchNode.CreateRootNode(
                     pathToNodes,
                     (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
 

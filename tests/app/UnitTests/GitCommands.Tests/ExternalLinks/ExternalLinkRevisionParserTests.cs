@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
-using FluentAssertions;
 using GitCommands.ExternalLinks;
 using GitCommands.Remotes;
 using GitExtensions.Extensibility.Git;
@@ -10,14 +9,12 @@ using JetBrains.Annotations;
 using NSubstitute;
 
 namespace GitCommandsTests.ExternalLinks;
-
-[TestFixture]
 public class ExternalLinkRevisionParserTests
 {
-    private IConfigFileRemoteSettingsManager _remotesManager;
-    private ExternalLinkRevisionParser _parser;
-    private ExternalLinkDefinition _linkDef;
-    private GitRevision _revision;
+    private IConfigFileRemoteSettingsManager _remotesManager = null!;
+    private ExternalLinkRevisionParser _parser = null!;
+    private ExternalLinkDefinition _linkDef = null!;
+    private GitRevision _revision = null!;
 
     [SetUp]
     public void Setup()
@@ -135,7 +132,7 @@ public class ExternalLinkRevisionParserTests
         XmlSerializer serializer = new(typeof(List<ExternalLinkDefinition>));
         using StringReader stringReader = new(xml);
         using XmlTextReader xmlReader = new(stringReader);
-        return serializer.Deserialize(xmlReader) as List<ExternalLinkDefinition>;
+        return (serializer.Deserialize(xmlReader) as List<ExternalLinkDefinition>)!;
     }
 
     private static string GetGitHubIssuesXmlDef()

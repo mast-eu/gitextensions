@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.Design;
-using FluentAssertions;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
@@ -7,13 +6,11 @@ using GitUI.CommandsDialogs;
 using NSubstitute;
 
 namespace GitUITests.CommandsDialogs;
-
-[TestFixture]
 [Apartment(ApartmentState.STA)]
 public class FormCommitTests
 {
     private IGitModule _gitModule = Substitute.For<IGitModule>();
-    private FormCommit _formCommit;
+    private FormCommit _formCommit = null!;
     [SetUp]
     public void Setup()
     {
@@ -23,6 +20,12 @@ public class FormCommitTests
         serviceContainer.AddService(Substitute.For<GitUI.ScriptsEngine.IScriptsRunner>());
         GitUICommands commands = new(serviceContainer, _gitModule);
         _formCommit = new FormCommit(commands);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _formCommit.Dispose();
     }
 
     [TestCase("Commit message")]

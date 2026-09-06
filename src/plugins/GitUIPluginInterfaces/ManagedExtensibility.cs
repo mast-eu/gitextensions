@@ -1,5 +1,6 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.Loader;
 using GitUI;
 using Microsoft.VisualStudio.Composition;
 
@@ -19,7 +20,7 @@ public static class ManagedExtensibility
     /// Sets a root path to a folder where user plugins are located.
     /// </summary>
     /// <param name="userPluginsPath">A root path to a folder where user plugins are located.</param>
-    public static void SetUserPluginsPath(string userPluginsPath)
+    public static void SetUserPluginsPath(string? userPluginsPath)
     {
         if (UserPluginsPath is not null)
         {
@@ -31,10 +32,10 @@ public static class ManagedExtensibility
 
     private static Lazy<ExportProvider> GetOrCreateLazyExportProvider(string? applicationDataFolder)
     {
-        Lazy<ExportProvider> lazyExportProvider = Volatile.Read(ref _exportProvider);
+        Lazy<ExportProvider>? lazyExportProvider = Volatile.Read(ref _exportProvider);
         if (lazyExportProvider is null)
         {
-            string capturedApplicationDataFolder = applicationDataFolder;
+            string? capturedApplicationDataFolder = applicationDataFolder;
             Lazy<ExportProvider> newLazyExportProvider = new(() => CreateExportProvider(capturedApplicationDataFolder), LazyThreadSafetyMode.ExecutionAndPublication);
             lazyExportProvider = Interlocked.CompareExchange(ref _exportProvider, newLazyExportProvider, null) ?? newLazyExportProvider;
         }
@@ -46,7 +47,7 @@ public static class ManagedExtensibility
     {
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        string defaultPluginsPath = Path.Combine(new FileInfo(Application.ExecutablePath).Directory.FullName, "Plugins");
+        string defaultPluginsPath = Path.Join(new FileInfo(Application.ExecutablePath).Directory!.FullName, "Plugins");
         string? userPluginsPath = UserPluginsPath;
 
         // The plugins that are bundled up with the app must follow this naming convention: GitExtensions.Plugins.*.dll
@@ -65,7 +66,7 @@ public static class ManagedExtensibility
         else
         {
             Assembly[] assemblies = [.. pluginFiles.Union(userPluginFiles)
-                                               .Select(assemblyFile => TryLoadAssembly(assemblyFile))
+                                               .Select(TryLoadAssembly)
                                                .WhereNotNull()];
 
             PartDiscovery? discovery = PartDiscovery.Combine(
@@ -73,7 +74,7 @@ public static class ManagedExtensibility
                 new AttributedPartDiscovery(Resolver.DefaultInstance, isNonPublicSupported: true));
             DiscoveredParts? parts = ThreadHelper.JoinableTaskFactory.Run(() => discovery.CreatePartsAsync(assemblies));
             ComposableCatalog catalog = ComposableCatalog.Create(Resolver.DefaultInstance)
-                .AddCatalog(_aggregateCatalog)
+                .AddCatalog(_aggregateCatalog!)
                 .AddParts(parts);
 
             CompositionConfiguration configuration = CompositionConfiguration.Create(catalog.WithCompositionService());
@@ -91,21 +92,30 @@ public static class ManagedExtensibility
         }
 
         return exportProviderFactory.CreateExportProvider();
+
+        static Assembly? TryLoadAssembly(FileInfo file)
+        {
+            try
+            {
+                Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName);
+
+                // Eagerly validate that all types in the assembly can be resolved.
+                // Outdated plugins targeting an incompatible interface version succeed
+                // at load time but throw ReflectionTypeLoadException here when any
+                // referenced type cannot be found in the currently loaded dependencies.
+                _ = assembly.GetTypes();
+
+                return assembly;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine($"Failed to load plugin {file.FullName}: {ex}");
+                return null;
+            }
+        }
     }
 
-    private static Assembly? TryLoadAssembly(FileInfo file)
-    {
-        try
-        {
-            return Assembly.LoadFile(file.FullName);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    public static void Initialise(IReadOnlyCollection<Assembly>? assemblies = null, string userPluginsPath = null)
+    public static void Initialise(IReadOnlyCollection<Assembly>? assemblies = null, string? userPluginsPath = null)
     {
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         SetUserPluginsPath(userPluginsPath);
@@ -160,7 +170,7 @@ public static class ManagedExtensibility
                 return null;
             }
 
-            string fullName = Directory.GetParent(args.RequestingAssembly.Location)?.FullName;
+            string? fullName = Directory.GetParent(args.RequestingAssembly.Location)?.FullName;
             if (fullName is null)
             {
                 return null;
@@ -173,7 +183,7 @@ public static class ManagedExtensibility
 
                     return fileDescription is not null && args.Name.StartsWith(fileDescription);
                 });
-            return dll is null ? null : Assembly.LoadFile(dll);
+            return dll is null ? null : AssemblyLoadContext.Default.LoadFromAssemblyPath(dll);
         }
         catch
         {

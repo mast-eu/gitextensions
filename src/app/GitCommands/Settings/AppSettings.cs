@@ -20,7 +20,7 @@ namespace GitCommands;
 public static partial class AppSettings
 {
     // semi-constants
-    public static Version AppVersion => Assembly.GetCallingAssembly().GetName().Version;
+    public static Version AppVersion => Assembly.GetCallingAssembly().GetName().Version!;
     public static string ProductVersion => Application.ProductVersion;
     public static readonly string ApplicationName = "Git Extensions";
     public static readonly string ApplicationId = ApplicationName.Replace(" ", "");
@@ -31,8 +31,8 @@ public static partial class AppSettings
 
     public static Lazy<string?> ApplicationDataPath { get; private set; }
     public static readonly Lazy<string?> LocalApplicationDataPath;
-    public static string SettingsFilePath => Path.Combine(ApplicationDataPath.Value, SettingsFileName);
-    public static string UserPluginsPath => Path.Combine(LocalApplicationDataPath.Value, UserPluginsDirectoryName);
+    public static string SettingsFilePath => Path.Join(ApplicationDataPath.Value!, SettingsFileName);
+    public static string UserPluginsPath => Path.Join(LocalApplicationDataPath.Value!, UserPluginsDirectoryName);
 
     public static DistributedSettings SettingsContainer { get; private set; }
 
@@ -48,7 +48,7 @@ public static partial class AppSettings
     private static readonly SettingsPath HiddenSettingsPath = new AppSettingsPath("Hidden");
     private static readonly SettingsPath MigrationSettingsPath = new AppSettingsPath(HiddenSettingsPath, "Migration");
 
-    private static Mutex _globalMutex;
+    private static Mutex? _globalMutex;
 
     [GeneratedRegex(@"^(?<major>\d+)\.(?<minor>\d+)", RegexOptions.ExplicitCapture)]
     private static partial Regex VersionRegex { get; }
@@ -77,7 +77,7 @@ public static partial class AppSettings
                 return GetGitExtensionsDirectory();
             }
 
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ApplicationId);
+            string path = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ApplicationId);
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -104,7 +104,7 @@ public static partial class AppSettings
         {
             try
             {
-                string dir = Path.GetDirectoryName(SettingsFilePath);
+                string? dir = Path.GetDirectoryName(SettingsFilePath);
                 if (!Directory.Exists(dir) || File.Exists(SettingsFilePath))
                 {
                     return false;
@@ -244,7 +244,7 @@ public static partial class AppSettings
             if (debugPath.ToPosixPath() == path.ToPosixPath())
             {
                 string projectPath = gitExtDir[..^len];
-                return Path.Combine(projectPath, "Bin");
+                return Path.Join(projectPath, "Bin");
             }
         }
 #endif
@@ -489,7 +489,11 @@ public static partial class AppSettings
     }
 
     public static ISetting<bool> ShowConEmuTab { get; } = Setting.Create(DetailedSettingsPath, nameof(ShowConEmuTab), true);
-    public static ISetting<string> ConEmuStyle { get; } = Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), "<Solarized Light>");
+
+    public static ISetting<string> ConsoleEmulatorName { get; } = Setting.Create(DetailedSettingsPath, nameof(ConsoleEmulatorName), "ConEmu");
+
+    public static ISetting<string> ConEmuStyle { get; } = Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), "Default");
+
     public static ISetting<string> ConEmuTerminal { get; } = Setting.Create(DetailedSettingsPath, nameof(ConEmuTerminal), "bash");
     public static ISetting<int> OutputHistoryDepth { get; } = Setting.Create(DetailedSettingsPath, nameof(OutputHistoryDepth), 20);
     public static ISetting<bool> OutputHistoryPanelVisible { get; } = Setting.Create(DetailedSettingsPath, nameof(OutputHistoryPanelVisible), false);
@@ -595,7 +599,7 @@ public static partial class AppSettings
 
     #region Avatars
 
-    public static string AvatarImageCachePath => Path.Combine(LocalApplicationDataPath.Value, "Images\\");
+    public static string AvatarImageCachePath => Path.Join(LocalApplicationDataPath.Value!, "Images");
 
     public static AvatarFallbackType AvatarFallbackType
     {
@@ -664,7 +668,7 @@ public static partial class AppSettings
     private static TEnum GetEnumViaString<TEnum>(string settingName, TEnum defaultValue)
         where TEnum : struct
     {
-        string settingStringValue = GetString(settingName, defaultValue.ToString());
+        string? settingStringValue = GetString(settingName, defaultValue.ToString());
 
         if (Enum.TryParse(settingStringValue, out TEnum settingEnumValue))
         {
@@ -737,7 +741,7 @@ public static partial class AppSettings
         if (!string.IsNullOrEmpty(ssh))
         {
             // OpenSSH uses empty path, compatibility with path set in 3.4
-            string path = new SshPathLocator().GetSshFromGitDir(LinuxToolsDir);
+            string? path = new SshPathLocator().GetSshFromGitDir(LinuxToolsDir);
             if (path == ssh)
             {
                 AppSettings.SshPath = "";
@@ -788,7 +792,7 @@ public static partial class AppSettings
 
     private static string? _currentTranslation;
 
-    public static string CurrentTranslation
+    public static string? CurrentTranslation
     {
         get => _currentTranslation ?? Translation;
         set => _currentTranslation = value;
@@ -820,7 +824,7 @@ public static partial class AppSettings
     {
         get
         {
-            if (_languageCodes.TryGetValue(CurrentTranslation, out string code))
+            if (CurrentTranslation is not null && _languageCodes.TryGetValue(CurrentTranslation, out string? code))
             {
                 return code;
             }
@@ -1032,17 +1036,9 @@ public static partial class AppSettings
         set => SetBool("AlwaysShowAdvOpt", value);
     }
 
-    public static bool DontConfirmAmend
-    {
-        get => GetBool("DontConfirmAmend", false);
-        set => SetBool("DontConfirmAmend", value);
-    }
+    public static ISetting<bool> DontConfirmAmend { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmAmend), false);
 
-    public static bool DontConfirmDeleteUnmergedBranch
-    {
-        get => GetBool("DontConfirmDeleteUnmergedBranch", false);
-        set => SetBool("DontConfirmDeleteUnmergedBranch", value);
-    }
+    public static ISetting<bool> DontConfirmDeleteUnmergedBranch { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmDeleteUnmergedBranch), false);
 
     public static bool DontConfirmCommitIfNoBranch
     {
@@ -1070,11 +1066,7 @@ public static partial class AppSettings
         set => SetNullableEnum("AutoPullOnPushRejectedAction", value);
     }
 
-    public static bool DontConfirmPushNewBranch
-    {
-        get => GetBool("DontConfirmPushNewBranch", false);
-        set => SetBool("DontConfirmPushNewBranch", value);
-    }
+    public static ISetting<bool> DontConfirmPushNewBranch { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmPushNewBranch), false);
 
     public static bool DontConfirmAddTrackingRef
     {
@@ -1082,47 +1074,19 @@ public static partial class AppSettings
         set => SetBool("DontConfirmAddTrackingRef", value);
     }
 
-    public static bool DontConfirmCommitAfterConflictsResolved
-    {
-        get => GetBool("DontConfirmCommitAfterConflictsResolved", false);
-        set => SetBool("DontConfirmCommitAfterConflictsResolved", value);
-    }
+    public static ISetting<bool> DontConfirmCommitAfterConflictsResolved { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmCommitAfterConflictsResolved), false);
 
-    public static bool DontConfirmSecondAbortConfirmation
-    {
-        get => GetBool("DontConfirmSecondAbortConfirmation", false);
-        set => SetBool("DontConfirmSecondAbortConfirmation", value);
-    }
+    public static ISetting<bool> DontConfirmSecondAbortConfirmation { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmSecondAbortConfirmation), false);
 
-    public static bool DontConfirmRebase
-    {
-        get => GetBool("DontConfirmRebase", false);
-        set => SetBool("DontConfirmRebase", value);
-    }
+    public static ISetting<bool> DontConfirmRebase { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmRebase), false);
 
-    public static bool DontConfirmResolveConflicts
-    {
-        get => GetBool("DontConfirmResolveConflicts", false);
-        set => SetBool("DontConfirmResolveConflicts", value);
-    }
+    public static ISetting<bool> DontConfirmResolveConflicts { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmResolveConflicts), false);
 
-    public static bool DontConfirmUndoLastCommit
-    {
-        get => GetBool("DontConfirmUndoLastCommit", false);
-        set => SetBool("DontConfirmUndoLastCommit", value);
-    }
+    public static ISetting<bool> DontConfirmUndoLastCommit { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmUndoLastCommit), false);
 
-    public static bool DontConfirmFetchAndPruneAll
-    {
-        get => GetBool("DontConfirmFetchAndPruneAll", false);
-        set => SetBool("DontConfirmFetchAndPruneAll", value);
-    }
+    public static ISetting<bool> DontConfirmFetchAndPruneAll { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmFetchAndPruneAll), false);
 
-    public static bool DontConfirmSwitchWorktree
-    {
-        get => GetBool("DontConfirmSwitchWorktree", false);
-        set => SetBool("DontConfirmSwitchWorktree", value);
-    }
+    public static ISetting<bool> DontConfirmSwitchWorktree { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmSwitchWorktree), false);
 
     public static bool IncludeUntrackedFilesInAutoStash
     {
@@ -1226,6 +1190,12 @@ public static partial class AppSettings
     {
         get => GetBool("showgitnotes", false);
         set => SetBool("showgitnotes", value);
+    }
+
+    public static bool ShowSessionRefs
+    {
+        get => GetBool("showSessionRefs", false);
+        set => SetBool("showSessionRefs", value);
     }
 
     public static ISetting<bool> ShowGitNotesColumn { get; } = Setting.Create(AppearanceSettingsPath, nameof(ShowGitNotesColumn), false);
@@ -1505,7 +1475,7 @@ public static partial class AppSettings
 
     public static Font CommitFont
     {
-        get => GetFont("commitfont", SystemFonts.MessageBoxFont);
+        get => GetFont("commitfont", SystemFonts.MessageBoxFont!);
         set => SetFont("commitfont", value);
     }
 
@@ -1517,13 +1487,13 @@ public static partial class AppSettings
 
     public static Font Font
     {
-        get => GetFont("font", SystemFonts.MessageBoxFont);
+        get => GetFont("font", SystemFonts.MessageBoxFont!);
         set => SetFont("font", value);
     }
 
-    public static Font ConEmuConsoleFont
+    public static Font? ConEmuConsoleFont
     {
-        get => GetFont("conemuconsolefont", new Font("Consolas", 12));
+        get => GetFont("conemuconsolefont", null);
         set => SetFont("conemuconsolefont", value);
     }
 
@@ -1641,7 +1611,7 @@ public static partial class AppSettings
 
     public static string GetDictionaryDir()
     {
-        return Path.Combine(GetResourceDir(), "Dictionaries");
+        return Path.Join(GetResourceDir()!, "Dictionaries");
     }
 
     public static void SaveSettings()
@@ -1853,11 +1823,7 @@ public static partial class AppSettings
         set => SetBool("OmitUninterestingDiff", value);
     }
 
-    public static bool UseConsoleEmulatorForCommands
-    {
-        get => GetBool("UseConsoleEmulatorForCommands", true);
-        set => SetBool("UseConsoleEmulatorForCommands", value);
-    }
+    public static ISetting<bool> UseConsoleEmulatorForCommands { get; } = Setting.Create(RootSettingsPath, nameof(UseConsoleEmulatorForCommands), true);
 
     public static GitRefsSortBy RefsSortBy
     {
@@ -1955,6 +1921,12 @@ public static partial class AppSettings
         set => SetBool("RepoObjectsTree.ShowSubmodules", value);
     }
 
+    public static bool RepoObjectsTreeShowWorktrees
+    {
+        get => GetBool("RepoObjectsTree.ShowWorktrees", true);
+        set => SetBool("RepoObjectsTree.ShowWorktrees", value);
+    }
+
     public static int RepoObjectsTreeBranchesIndex
     {
         get => GetInt("RepoObjectsTree.BranchesIndex", 0);
@@ -1967,21 +1939,27 @@ public static partial class AppSettings
         set => SetInt("RepoObjectsTree.RemotesIndex", value);
     }
 
+    public static int RepoObjectsTreeWorktreesIndex
+    {
+        get => GetInt("RepoObjectsTree.WorktreesIndex", 2);
+        set => SetInt("RepoObjectsTree.WorktreesIndex", value);
+    }
+
     public static int RepoObjectsTreeTagsIndex
     {
-        get => GetInt("RepoObjectsTree.TagsIndex", 2);
+        get => GetInt("RepoObjectsTree.TagsIndex", 3);
         set => SetInt("RepoObjectsTree.TagsIndex", value);
     }
 
     public static int RepoObjectsTreeSubmodulesIndex
     {
-        get => GetInt("RepoObjectsTree.SubmodulesIndex", 3);
+        get => GetInt("RepoObjectsTree.SubmodulesIndex", 4);
         set => SetInt("RepoObjectsTree.SubmodulesIndex", value);
     }
 
     public static int RepoObjectsTreeStashesIndex
     {
-        get => GetInt("RepoObjectsTree.StashesIndex", 4);
+        get => GetInt("RepoObjectsTree.StashesIndex", 5);
         set => SetInt("RepoObjectsTree.StashesIndex", value);
     }
 
@@ -1995,6 +1973,16 @@ public static partial class AppSettings
     {
         get => GetString("PrioritizedRemoteNames", "origin|upstream");
         set => SetString("PrioritizedRemoteNames", value);
+    }
+
+    /// <summary>
+    ///  Remote names to prefer when auto-detecting build server integration, separated by <c>|</c>.
+    ///  Defaults to <c>upstream|origin</c> so that forks resolve to the upstream project's CI.
+    /// </summary>
+    public static string PrioritizedBuildServerRemoteNames
+    {
+        get => GetString("PrioritizedBuildServerRemoteNames", "upstream|origin|remote");
+        set => SetString("PrioritizedBuildServerRemoteNames", value);
     }
 
     public static bool BlameDisplayAuthorFirst
@@ -2087,9 +2075,9 @@ public static partial class AppSettings
 
     public static ISetting<string> UninformativeRepoNameRegex { get; } = Setting.Create(DetailedSettingsPath, nameof(UninformativeRepoNameRegex), "app|(repo(sitory)?)");
 
-    private static IEnumerable<(string name, string value)> GetSettingsFromRegistry()
+    private static IEnumerable<(string name, string? value)> GetSettingsFromRegistry()
     {
-        RegistryKey oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
+        RegistryKey? oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
 
         if (oldSettings is null)
         {
@@ -2098,7 +2086,7 @@ public static partial class AppSettings
 
         foreach (string name in oldSettings.GetValueNames())
         {
-            object value = oldSettings.GetValue(name, null);
+            object? value = oldSettings.GetValue(name, null);
 
             if (value is not null)
             {
@@ -2138,8 +2126,9 @@ public static partial class AppSettings
     public static void SetDate(string name, DateTime? value) => SettingsContainer.SetDate(name, value);
 
     // Font
-    public static Font GetFont(string name, Font defaultValue) => SettingsContainer.GetFont(name, defaultValue);
-    public static void SetFont(string name, Font value) => SettingsContainer.SetFont(name, value);
+    [return: NotNullIfNotNull("defaultValue")]
+    public static Font? GetFont(string name, Font? defaultValue) => SettingsContainer.GetFont(name, defaultValue);
+    public static void SetFont(string name, Font? value) => SettingsContainer.SetFont(name, value);
 
     [Obsolete("AppSettings is no longer responsible for colors, ThemeModule is. Only used by ThemeMigration.")]
     public static Color GetColor(AppColor name)
@@ -2253,8 +2242,8 @@ public static partial class AppSettings
         {
             if (_isDesignMode is null)
             {
-                string processName = Process.GetCurrentProcess().ProcessName.ToLowerInvariant();
-                _isDesignMode = processName.Contains("devenv") || processName.Contains("designtoolsserver");
+                string processName = Path.GetFileNameWithoutExtension(Environment.ProcessPath ?? string.Empty);
+                _isDesignMode = processName.Contains("devenv", StringComparison.OrdinalIgnoreCase) || processName.Contains("designtoolsserver", StringComparison.OrdinalIgnoreCase);
             }
 
             return _isDesignMode.Value;

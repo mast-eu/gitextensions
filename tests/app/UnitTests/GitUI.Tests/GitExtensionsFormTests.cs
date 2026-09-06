@@ -1,15 +1,13 @@
-﻿using FluentAssertions;
-using GitExtUtils.GitUI;
+﻿using GitExtUtils.GitUI;
 using GitUI;
 using NSubstitute;
 
 namespace GitUITests;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public class GitExtensionsFormTests
 {
-    private IWindowPositionManager _windowPositionManager;
+    private IWindowPositionManager _windowPositionManager = null!;
 
     [SetUp]
     public void Setup()
@@ -118,7 +116,7 @@ public class GitExtensionsFormTests
     {
         if (DpiUtil.IsNonStandard)
         {
-            ClassicAssert.Inconclusive("The test must be run at 96dpi");
+            Assert.Inconclusive("The test must be run at 96dpi");
         }
 
         using MockForm form = new(true)
@@ -152,7 +150,7 @@ public class GitExtensionsFormTests
     {
         if (DpiUtil.IsNonStandard)
         {
-            ClassicAssert.Inconclusive("The test must be run at 96dpi");
+            Assert.Inconclusive("The test must be run at 96dpi");
         }
 
         using Form owner = new()

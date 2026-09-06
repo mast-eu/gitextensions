@@ -9,7 +9,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns;
 
-internal sealed class RevisionGraphColumnProvider : ColumnProvider
+internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 {
     private readonly LaneInfoProvider _laneInfoProvider;
     private readonly RevisionGraph _revisionGraph;
@@ -18,11 +18,15 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
     private int _columnWidth = 0;
 
+    private VisibleRowRange _cachedVisibleRange;
+    private readonly HoverHighlightCalculator _hoverHighlight;
+
     public RevisionGraphColumnProvider(RevisionGraph revisionGraph, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
         : base("Graph")
     {
         _revisionGraph = revisionGraph;
         _laneInfoProvider = new LaneInfoProvider(new LaneNodeLocator(_revisionGraph), gitRevisionSummaryBuilder);
+        _hoverHighlight = new HoverHighlightCalculator(_revisionGraph, () => _cachedVisibleRange);
 
         Column = new DataGridViewTextBoxColumn
         {
@@ -40,7 +44,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     {
         try
         {
-            DrawGraphCellFromCache(e.RowIndex, rowHeight, e.CellBounds, e.Graphics);
+            DrawGraphCellFromCache(e.RowIndex, rowHeight, e.CellBounds, e.Graphics!);
         }
         catch (Exception ex)
         {
@@ -52,7 +56,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         }
     }
 
-    private bool DrawGraphCellFromCache(int rowIndex, int rowHeight, Rectangle cellBounds, Graphics graphics)
+    private void DrawGraphCellFromCache(int rowIndex, int rowHeight, Rectangle cellBounds, Graphics graphics)
     {
         // Draws the required row from the cache if available.
 
@@ -62,14 +66,14 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         if (width <= 0 || height <= 0)
         {
             // Nothing to be drawn
-            return true;
+            return;
         }
 
         int offsetToHead = rowIndex - _graphDisplayCache.HeadRow;
         if (offsetToHead < 0 || offsetToHead >= _graphDisplayCache.Count)
         {
             // Item not in the cache
-            return false;
+            return;
         }
 
         Rectangle cellRect = new(
@@ -79,12 +83,10 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
             rowHeight);
 
         graphics.DrawImage(
-            _graphDisplayCache.GraphBitmap,
+            _graphDisplayCache.GraphBitmap!,
             cellBounds,
             cellRect,
             GraphicsUnit.Pixel);
-
-        return true;
     }
 
     public async Task RenderGraphToCacheAsync(VisibleRowRange range, int toRowIndex, int rowHeight, CancellationToken cancellationToken)
@@ -113,10 +115,18 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
     private void RenderGraphToCache(VisibleRowRange range, int toRowIndex, int rowHeight)
     {
+        _cachedVisibleRange = range;
+
         int width = CalculateGraphColumnWidth(range);
         if (_columnWidth != width)
         {
             _columnWidth = width;
+            _graphRenderCache.Reset();
+        }
+
+        if (_hoverHighlight.ConsumeIsDirty())
+        {
+            // Hover state changed since last render. Reset so all rows re-render with new highlight.
             _graphRenderCache.Reset();
         }
 
@@ -195,11 +205,11 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
             laneRect.Y = _graphRenderCache.GetCacheRow(rowIndex) * rowHeight;
 
             using Region newClip = new(laneRect);
-            _graphRenderCache.GraphBitmapGraphics.Clip = newClip;
+            _graphRenderCache.GraphBitmapGraphics!.Clip = newClip;
 
             _graphRenderCache.GraphBitmapGraphics.RenderingOrigin = new Point(x, laneRect.Y);
 
-            GraphRenderer.DrawItem(_revisionGraph.Config, _graphRenderCache.GraphBitmapGraphics, rowIndex, rowHeight, _revisionGraph.GetSegmentsForRow, RevisionGraphDrawStyle, _revisionGraph.HeadId);
+            GraphRenderer.DrawItem(_revisionGraph.Config, _graphRenderCache.GraphBitmapGraphics, rowIndex, rowHeight, _revisionGraph.GetSegmentsForRow, RevisionGraphDrawStyle, _revisionGraph.HeadId, _hoverHighlight.HighlightedIds);
         }
     }
 
@@ -212,12 +222,26 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     {
         _graphRenderCache.Reset();
         _graphDisplayCache.Reset();
+        _hoverHighlight.Clear();
     }
 
     public void HighlightBranch(ObjectId id)
     {
         _revisionGraph.HighlightBranch(id);
     }
+
+    /// <summary>
+    ///  Updates the hover highlight to show only the ancestry of the
+    ///  <paramref name="gitRef"/> and tracked remote or the tracking local.
+    ///  Debounces before computing, cancelling any prior pending computation when called again.
+    ///  Set <see langword="null"/> to clear hover highlighting.
+    /// </summary>
+    /// <param name="gitRef">The ref to highlight, or <see langword="null"/> to clear.</param>
+    /// <param name="rowIndex">
+    ///  The row index of the hovered ref label, limits the search to the visible range.
+    /// </param>
+    public Task SetHoverHighlightAsync(IGitRef? gitRef, int rowIndex = -1)
+        => _hoverHighlight.SetAsync(gitRef, rowIndex);
 
     private int CalculateGraphColumnWidth(in VisibleRowRange range)
     {
@@ -240,6 +264,8 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         return false;
     }
 
+    public void Dispose() => _hoverHighlight.Dispose();
+
     internal TestAccessor GetTestAccessor() => new(this);
 
     internal readonly struct TestAccessor
@@ -252,6 +278,9 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         internal RevisionGraphColumnProvider RevisionGraphColumnProvider { get; }
 
         internal GraphCache GraphCache => RevisionGraphColumnProvider._graphRenderCache;
+
+        internal HoverHighlightCalculator.TestAccessor HoverHighlight
+            => RevisionGraphColumnProvider._hoverHighlight.GetTestAccessor();
 
         internal void RenderGraphToCache(VisibleRowRange range, int toRowIndex, int rowHeight)
             => RevisionGraphColumnProvider.RenderGraphToCache(range, toRowIndex, rowHeight);

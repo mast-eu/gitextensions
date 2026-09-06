@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Net;
 using System.Reactive.Linq;
 using System.Text;
@@ -73,9 +71,9 @@ public partial class CommitInfo : GitModuleControl
     private string? _linksInfo;
     private IDictionary<string, string>? _annotatedTagsMessages;
     private string? _annotatedTagsInfo;
-    private List<string>? _tags;
+    private string[]? _tags;
     private string? _tagInfo;
-    private List<string>? _branches;
+    private string[]? _branches;
     private string? _branchInfo;
     private string? _gitDescribeInfo;
     private IDictionary<string, int>? _tagsOrderDict;
@@ -106,7 +104,7 @@ public partial class CommitInfo : GitModuleControl
         _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
         _gitDescribeProvider = new GitDescribeProvider(() => Module);
 
-        Color messageBackground = SystemColors.Window.MakeBackgroundDarkerBy(0.04);
+        Color messageBackground = SystemColors.Window.MakeDarkerBy(0.04);
         pnlCommitMessage.BackColor = messageBackground;
         rtbxCommitMessage.BackColor = messageBackground;
 
@@ -213,7 +211,7 @@ public partial class CommitInfo : GitModuleControl
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -275,13 +273,10 @@ public partial class CommitInfo : GitModuleControl
         Dictionary<string, int> dict = [];
         foreach (string entry in tree.LazySplit('\n'))
         {
-            if (dict.ContainsKey(entry))
+            if (dict.TryAdd(entry, i))
             {
-                continue;
+                ++i;
             }
-
-            dict.Add(entry, i);
-            i++;
         }
 
         return dict;
@@ -300,7 +295,7 @@ public partial class CommitInfo : GitModuleControl
         catch (RefsWarningException ex)
         {
             await this.SwitchToMainThreadAsync();
-            MessageBox.Show(this, string.Format("{0}{1}{1}{2}", _brokenRefs.Text, Environment.NewLine, ex.Message), _repoFailure.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, string.Format("{0}{1}{1}{2}", _brokenRefs.Text, Environment.NewLine, ex.Message), _repoFailure.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -536,13 +531,13 @@ public partial class CommitInfo : GitModuleControl
             {
                 await TaskScheduler.Default;
 
-                List<string> tags = [.. Module.GetAllTagsWhichContainGivenCommit(objectId, cancellationToken)];
+                string[] tags = [.. Module.GetAllTagsWhichContainGivenCommit(objectId, cancellationToken)];
 
                 await this.SwitchToMainThreadAsync(cancellationToken);
                 _tags = tags;
             }
 
-            async Task LoadBranchInfoAsync(ObjectId revision)
+            async Task LoadBranchInfoAsync(ObjectId objectId)
             {
                 await TaskScheduler.Default;
 
@@ -553,7 +548,7 @@ public partial class CommitInfo : GitModuleControl
                 // Include remote branches if requested
                 bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                                  AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-                List<string> branches = [.. Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote, cancellationToken)];
+                string[] branches = [.. Module.GetAllBranchesWhichContainGivenCommit(objectId, getLocal, getRemote, cancellationToken)];
 
                 await this.SwitchToMainThreadAsync(cancellationToken);
                 _branches = branches;
@@ -585,10 +580,10 @@ public partial class CommitInfo : GitModuleControl
                     if (!string.IsNullOrEmpty(precedingTag))
                     {
                         string tagString = ShowBranchesAsLinks ? linkFactory.CreateTagLink(precedingTag) : WebUtility.HtmlEncode(precedingTag);
-                        gitDescribeInfo.Append(WebUtility.HtmlEncode(_derivesFromTag.Text) + " " + tagString);
+                        gitDescribeInfo.Append(WebUtility.HtmlEncode(_derivesFromTag.Text)).Append(' ').Append(tagString);
                         if (!string.IsNullOrEmpty(commitCount))
                         {
-                            gitDescribeInfo.Append(" + " + commitCount + " " + WebUtility.HtmlEncode(_plusCommits.Text));
+                            gitDescribeInfo.Append(" + ").Append(commitCount).Append(' ').Append(WebUtility.HtmlEncode(_plusCommits.Text));
                         }
                     }
                     else
@@ -632,14 +627,14 @@ public partial class CommitInfo : GitModuleControl
 
             if (_tags is not null && string.IsNullOrEmpty(_tagInfo))
             {
-                _tags.Sort(new TagsComparer(_tagsOrderDict));
+                Array.Sort(_tags, new TagsComparer(_tagsOrderDict));
                 _tagInfo = refsFormatter.FormatTags(_tags, ShowBranchesAsLinks, limit: !_showAllTags);
             }
         }
 
         if (_branches is not null && string.IsNullOrEmpty(_branchInfo))
         {
-            _branches.Sort(new BranchComparer(_branches, Module.GetSelectedBranch()));
+            Array.Sort(_branches, new BranchComparer(_branches, Module.GetSelectedBranch()));
             _branchInfo = refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks, limit: !_showAllBranches);
         }
 
@@ -857,7 +852,7 @@ public partial class CommitInfo : GitModuleControl
         private readonly bool _isDetachedHead;
         private readonly Dictionary<string, int> _orderByBranch = [];
 
-        public BranchComparer(List<string> branches, string currentBranch)
+        public BranchComparer(string[] branches, string currentBranch)
         {
             _currentBranch = currentBranch;
             _isDetachedHead = DetachedHeadParser.IsDetachedHead(currentBranch);

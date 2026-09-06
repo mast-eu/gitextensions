@@ -4,12 +4,9 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.Resources;
 using System.Text;
-using FluentAssertions;
 using GitUI.Properties;
 
 namespace GitUITests;
-
-[TestFixture]
 public class ResourcesTests
 {
     [Test]
@@ -17,10 +14,10 @@ public class ResourcesTests
     {
         // arrange
         // Note: do not dispose it, as it's a global resource used by others.
-        ResourceSet resourceSet = Images.ResourceManager.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists: true, tryParents: false);
+        ResourceSet? resourceSet = Images.ResourceManager.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists: true, tryParents: false);
 
         // act & assert
-        foreach (DictionaryEntry resourceEntry in resourceSet)
+        foreach (DictionaryEntry resourceEntry in resourceSet!)
         {
             if (resourceEntry.Value is not Bitmap bitmap || !ImageFormat.Png.Equals(bitmap.RawFormat))
             {

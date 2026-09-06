@@ -53,7 +53,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         _currentViewPositionCache = new CurrentViewPositionCache(this);
         TextEditor.ActiveTextAreaControl.TextArea.SelectionManager.SelectionChanged += SelectionManagerSelectionChanged;
 
-        TextEditor.ActiveTextAreaControl.TextArea.PreviewKeyDown += (s, e) =>
+        TextEditor.ActiveTextAreaControl.TextArea.PreviewKeyDown += (_, e) =>
         {
             if (e.KeyCode == Keys.Escape && !TextEditor.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
             {
@@ -95,7 +95,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         _continuousScrollEventManager = continuousScrollEventManager;
     }
 
-    internal void GutterSelectedLineChanged(object sender, EventArgs e)
+    internal void GutterSelectedLineChanged(object? sender, EventArgs e)
     {
         GutterSelectedLineChanged(TextEditor.ActiveTextAreaControl.Caret.Line);
     }
@@ -106,7 +106,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         TextEditor.ActiveTextAreaControl.TextArea.GutterMargin.SelectedLineChanged(lineNo);
     }
 
-    private void SelectionManagerSelectionChanged(object sender, EventArgs e)
+    private void SelectionManagerSelectionChanged(object? sender, EventArgs e)
     {
         string text = TextEditor.ActiveTextAreaControl.TextArea.SelectionManager.SelectedText;
         TextEditor.Document.MarkerStrategy.RemoveAll(m => true);
@@ -142,7 +142,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
                 TextMarker textMarker = new(indexMatch,
                     word.Length, TextMarkerType.SolidBlock, highlightColor,
-                    ColorHelper.GetForeColorForBackColor(highlightColor));
+                    highlightColor.GetTextColor());
 
                 selectionMarkers.Add(textMarker);
             }
@@ -170,7 +170,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         List<TextMarker> markers = TextEditor.Document.MarkerStrategy.GetMarkers(offset,
             TextEditor.Document.TextLength - offset);
 
-        TextMarker marker =
+        TextMarker? marker =
             markers.FirstOrDefault(x => x.Offset > offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
         if (marker is not null)
         {
@@ -188,7 +188,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
         List<TextMarker> markers = TextEditor.Document.MarkerStrategy.GetMarkers(0, offset);
 
-        TextMarker marker =
+        TextMarker? marker =
             markers.LastOrDefault(x => x.Offset < offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
         if (marker is not null)
         {
@@ -412,7 +412,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     /// </summary>
     public void AddTextHighlighting()
     {
-        TextEditor.Document.MarkerStrategy.RemoveAll(m => true);
+        TextEditor.Document.MarkerStrategy.RemoveAll(_ => true);
         _textHighlightService.AddTextHighlighting(TextEditor.Document);
     }
 
@@ -589,8 +589,8 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             // if header is selected then don't remove diff extra chars
             if (hpos <= pos)
             {
-                char[] specials = [' ', '-', '+'];
-                lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s[1..] : s);
+                const string specials = " -+";
+                lines = lines.Select(s => s.Length > 0 && specials.Contains(s[0]) ? s[1..] : s);
             }
 
             text = string.Join("\n", lines);
@@ -752,7 +752,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     public void ClearHighlighting()
     {
         IDocument document = TextEditor.Document;
-        document.MarkerStrategy.RemoveAll(t => true);
+        document.MarkerStrategy.RemoveAll(_ => true);
     }
 
     public int TotalNumberOfLines => TextEditor.Document.TotalNumberOfLines;
@@ -768,20 +768,38 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         _findAndReplaceForm.SetFileLoader(fileLoader);
     }
 
-    private void TextArea_MouseWheel(object sender, MouseEventArgs e)
+    private void TextArea_MouseWheel(object? sender, MouseEventArgs e)
     {
+        if (ModifierKeys.HasFlag(Keys.Shift))
+        {
+            int scrollAmount = DpiUtil.Scale(8);
+            HScrollPosition = e.Delta switch
+            {
+                > 0 => Math.Max(0, HScrollPosition - scrollAmount),
+                < 0 => HScrollPosition + scrollAmount,
+                _ => HScrollPosition
+            };
+
+            if (e is HandledMouseEventArgs handled)
+            {
+                handled.Handled = true;
+            }
+
+            return;
+        }
+
         bool isScrollingTowardTop = e.Delta > 0;
         bool isScrollingTowardBottom = e.Delta < 0;
         VScrollBar scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
 
         if (isScrollingTowardTop && (scrollBar.Value == 0))
         {
-            _continuousScrollEventManager?.RaiseTopScrollReached(sender, e);
+            _continuousScrollEventManager?.RaiseTopScrollReached(sender!, e);
         }
 
         if (isScrollingTowardBottom && (!scrollBar.Visible || scrollBar.Value + scrollBar.Height > scrollBar.Maximum))
         {
-            _continuousScrollEventManager?.RaiseBottomScrollReached(sender, e);
+            _continuousScrollEventManager?.RaiseBottomScrollReached(sender!, e);
         }
     }
 

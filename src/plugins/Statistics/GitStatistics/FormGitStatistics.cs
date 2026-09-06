@@ -136,7 +136,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
         pie.SetColors([.. DecentColors.Select(c => c.AdaptBackColor())]);
         pie.SetShadowStyle(ShadowStyle.GradualShadow);
 
-        if (pie.Parent.Width > pie.Parent.Height)
+        if (pie.Parent!.Width > pie.Parent.Height)
         {
             pie.Height = pie.Parent.Height;
             pie.Width = pie.Parent.Height;
@@ -184,7 +184,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
             void LoadLinesOfCodeForModule(IGitModule module)
             {
                 List<string> filesToCheck = [.. module
-                    .GetTree(commitId: null, full: true)
+                    .GetTree(commitId: default, full: true)
                     .Select(file => Path.Combine(module.WorkingDir, file.Name))];
 
                 _lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore, filesToCheck);
@@ -192,7 +192,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
         }
     }
 
-    private void OnLineCounterUpdated(object sender, EventArgs e)
+    private void OnLineCounterUpdated(object? sender, EventArgs e)
     {
         Validates.NotNull(_lineCounter);
 

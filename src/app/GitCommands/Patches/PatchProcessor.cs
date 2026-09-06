@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Text;
 using System.Text.RegularExpressions;
+using GitCommands.Git;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -102,7 +103,7 @@ public static partial class PatchProcessor
         }
 
         header = GitModule.ReEncodeFileNameFromLossless(header);
-        bool isCombinedDiff = headerMatch.Groups["type"].Value != "git";
+        bool isCombinedDiff = headerMatch.Groups["type"].ValueSpan is not "git";
         if (!headerMatch.Success || (!isCombinedDiff && !headerMatch.Groups["filenameb"].Success))
         {
             throw new FormatException($"Invalid patch header: {header}");
@@ -113,7 +114,7 @@ public static partial class PatchProcessor
 
         StringBuilder patchText = new();
 
-        patchText.Append(ReaddEscapes(rawHeader, header, contentMatch));
+        patchText.Append(ReaddEscapes(rawHeader.AsSpan(), header, contentMatch));
         if (lineIndex < lines.Length - 1)
         {
             patchText.Append('\n');
@@ -249,7 +250,7 @@ public static partial class PatchProcessor
                 }
             }
 
-            patchText.Append(ReaddEscapes(rawLine, line, lineMatch));
+            patchText.Append(ReaddEscapes(rawLine.AsSpan(), line, lineMatch));
             if (i < lines.Length - 1)
             {
                 patchText.Append('\n');
@@ -282,7 +283,7 @@ public static partial class PatchProcessor
         return new Patch(header, index, fileType, fileNameA, fileNameB, changeType, patchText.ToString());
 
         // Add the escape sequences back to the header
-        static string ReaddEscapes(string rawLine, string line, Match lineMatch)
+        static string ReaddEscapes(ReadOnlySpan<char> rawLine, string line, Match lineMatch)
             => $"{rawLine[..lineMatch.Index]}{line}{rawLine[(lineMatch.Index + lineMatch.Length)..]}";
     }
 }

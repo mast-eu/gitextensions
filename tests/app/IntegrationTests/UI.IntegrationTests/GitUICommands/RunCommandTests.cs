@@ -1,5 +1,4 @@
 ﻿using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.UITests;
@@ -9,14 +8,13 @@ using GitUI.CommandsDialogs;
 namespace GitUITests.GitUICommandsTests;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public sealed class RunCommandTests
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
@@ -35,7 +33,7 @@ public sealed class RunCommandTests
         _referenceRepository.Module.GitExecutable.RunCommand("config --local diff.guitool cmd").Should().BeTrue();
         _referenceRepository.Module.GitExecutable.RunCommand("config --local merge.guitool cmd").Should().BeTrue();
 
-        AppSettings.UseConsoleEmulatorForCommands = false;
+        AppSettings.UseConsoleEmulatorForCommands.Value = false;
         AppSettings.CloseProcessDialog = true;
         AppSettings.UseBrowseForFileHistory.Value = false;
 
@@ -51,7 +49,7 @@ public sealed class RunCommandTests
     [Test]
     public void RunCommandBasedOnArgument_should_throw_on_null_args()
     {
-        ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(null)))
+        ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(null!)))
             .Should().Throw<NullReferenceException>();
     }
 
@@ -176,7 +174,7 @@ public sealed class RunCommandTests
         List<string> args = ["ge.exe", command, "filename"];
         if (commit)
         {
-            args.Add(_referenceRepository.CommitHash);
+            args.Add(_referenceRepository.CommitHash!);
             if (filter)
             {
                 args.Add("--filter-by-revision");
@@ -184,7 +182,7 @@ public sealed class RunCommandTests
         }
 
         RunCommandBasedOnArgument<FormFileHistory>([.. args],
-            runTest: form => form.FindDescendantOfType<FullBleedTabControl>(_ => true).SelectedTab.Text.Should().Be(expectedTab));
+            runTest: form => form.FindDescendantOfType<FullBleedTabControl>(_ => true)!.SelectedTab!.Text.Should().Be(expectedTab));
     }
 
     [Test]
@@ -202,7 +200,7 @@ public sealed class RunCommandTests
         ];
         (bool commitValid, bool filter, bool filterValid) = invalidVariants[invalidVariant];
 
-        List<string> args = ["ge.exe", command, "filename", commitValid ? _referenceRepository.CommitHash : "no-commit"];
+        List<string> args = ["ge.exe", command, "filename", commitValid ? _referenceRepository.CommitHash! : "no-commit"];
         if (filter)
         {
             args.Add(filterValid ? "--filter-by-revision" : "invalid");
@@ -290,7 +288,7 @@ public sealed class RunCommandTests
             while (true)
             {
                 await UITest.WaitForIdleAsync();
-                FormPull formPull = Application.OpenForms.OfType<FormPull>().FirstOrDefault();
+                FormPull? formPull = Application.OpenForms.OfType<FormPull>().FirstOrDefault();
                 if (formPull is not null)
                 {
                     formPull.Close();
@@ -301,7 +299,7 @@ public sealed class RunCommandTests
             while (true)
             {
                 await UITest.WaitForIdleAsync();
-                FormPush formPush = Application.OpenForms.OfType<FormPush>().FirstOrDefault();
+                FormPush? formPush = Application.OpenForms.OfType<FormPush>().FirstOrDefault();
                 if (formPush is not null)
                 {
                     formPush.Close();
@@ -336,7 +334,7 @@ public sealed class RunCommandTests
     public void RunCommandBasedOnArgument_unsupported(string command)
         => RunCommandBasedOnArgument<FormCommandlineHelp>(["ge.exe", command]);
 
-    private void RunCommandBasedOnArgument<TForm>(string[] args, bool expectedResult = true, Action<TForm> runTest = null) where TForm : Form
+    private void RunCommandBasedOnArgument<TForm>(string[] args, bool expectedResult = true, Action<TForm>? runTest = null) where TForm : Form
     {
         UITest.RunForm<TForm>(
             showForm: () => _commands.GetTestAccessor().RunCommandBasedOnArgument(args).Should().Be(expectedResult),
@@ -349,8 +347,8 @@ public sealed class RunCommandTests
     }
 
     private static void ClickButton(Form form, string buttonName)
-        => form.FindDescendantOfType<Button>(button => button.Name == buttonName).PerformClick();
+        => form.FindDescendantOfType<Button>(button => button.Name == buttonName)!.PerformClick();
 
     private static void SetText(Form form, string controlName, string value)
-        => form.FindDescendantOfType<Control>(control => control.Name == controlName).Text = value;
+        => form.FindDescendantOfType<Control>(control => control.Name == controlName)!.Text = value;
 }

@@ -1,10 +1,7 @@
-﻿using FluentAssertions;
-using GitCommands.Config;
+﻿using GitCommands.Config;
 using GitUI.CommandsDialogs.BrowseDialog;
 
 namespace GitUITests.CommandsDialogs.BrowseDialog;
-
-[TestFixture]
 public class ReleaseVersionTests
 {
     private static string GetReleasesConfigFileText()

@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using ResourceManager;
@@ -9,14 +8,13 @@ namespace ResourceManagerTests.CommitDataRenders;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class CommitDataHeaderRendererTests
 {
-    private IHeaderLabelFormatter _labelFormatter;
-    private IHeaderRenderStyleProvider _headerRendererStyleProvider;
-    private ILinkFactory _linkFactory;
-    private IDateFormatter _dateFormatter;
-    private CommitDataHeaderRenderer _renderer;
+    private IHeaderLabelFormatter _labelFormatter = null!;
+    private IHeaderRenderStyleProvider _headerRendererStyleProvider = null!;
+    private ILinkFactory _linkFactory = null!;
+    private IDateFormatter _dateFormatter = null!;
+    private CommitDataHeaderRenderer _renderer = null!;
 
     private readonly IReadOnlyList<ObjectId> _childrenHashes = new[]
     {
@@ -75,7 +73,7 @@ public class CommitDataHeaderRendererTests
     [Test]
     public void Render_should_throw_if_data_null()
     {
-        ((Action)(() => _renderer.Render(null, true))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => _renderer.Render(null!, true))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -253,7 +251,7 @@ public class CommitDataHeaderRendererTests
     [Test]
     public void RenderPlain_should_throw_if_data_null()
     {
-        ((Action)(() => _renderer.RenderPlain(null))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => _renderer.RenderPlain(null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]

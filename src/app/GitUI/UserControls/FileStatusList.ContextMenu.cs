@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System.Text;
+﻿using System.Text;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Extended;
@@ -107,7 +105,9 @@ partial class FileStatusList
 
     private void AddFileToIgnoreFile(bool localExclude)
     {
-        string[] fileNames = [.. SelectedItems.Select(item => "/" + item.Item.Name)];
+        string[] fileNames = SelectedFolder is { Length: > 0 } selectedFolder
+            ? [$"/{selectedFolder}/"]
+            : [.. SelectedItems.Select(item => "/" + item.Item.Name)];
         if (fileNames.Length > 0 && UICommands.StartAddToGitIgnoreDialog(this, localExclude, fileNames))
         {
             RequestRefresh();
@@ -202,7 +202,7 @@ partial class FileStatusList
     /// <param name="parentId">The parent commit id.</param>
     /// <param name="selectedItems">The selected file status items.</param>
     /// <returns><see langword="true"/> if it is possible to reset to first id.</returns>
-    private static bool CanResetToFirst(ObjectId? parentId, IEnumerable<FileStatusItem> selectedItems)
+    private static bool CanResetToFirst(ObjectId parentId, IEnumerable<FileStatusItem> selectedItems)
     {
         return CanResetToSecond(parentId) || (parentId == ObjectId.IndexId && selectedItems.SecondIds().All(i => i == ObjectId.WorkTreeId));
     }
@@ -212,7 +212,7 @@ partial class FileStatusList
     /// </summary>
     /// <param name="resetId">The selected commit id.</param>
     /// <returns><see langword="true"/> if it is possible to reset to first id.</returns>
-    private static bool CanResetToSecond(ObjectId? resetId) => resetId?.IsArtificial is false;
+    private static bool CanResetToSecond(ObjectId resetId) => !resetId.IsZeroOrArtificial;
 
     private void CherryPickChanges_Click(object sender, EventArgs e)
     {
@@ -237,7 +237,7 @@ partial class FileStatusList
         {
             FileStatusItem[] selected = [.. SelectedItems];
             if (selected.Length == 0 || !selected[0].SecondRevision.IsArtificial ||
-                MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo,
+                MessageBoxes.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning) !=
                 DialogResult.Yes)
             {
@@ -257,7 +257,7 @@ partial class FileStatusList
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         return;
@@ -292,7 +292,7 @@ partial class FileStatusList
     {
         return parents.Count switch
         {
-            1 => GetDescriptionForRevision(parents[0]?.ObjectId),
+            1 => GetDescriptionForRevision(parents[0]?.ObjectId ?? default(ObjectId)),
             > 1 => _multipleDescription.Text,
             _ => null
         };
@@ -619,8 +619,8 @@ partial class FileStatusList
     {
         // Multiple parent/child can be selected, only the the first is shown.
         // The only artificial commit that can be reset to is Index<-WorkTree
-        ObjectId? selectedId = SelectedItems.SecondIds().FirstOrDefault();
-        ObjectId? parentId = SelectedItems.FirstIds().FirstOrDefault();
+        ObjectId selectedId = SelectedItems.SecondIds().FirstOrDefault();
+        ObjectId parentId = SelectedItems.FirstIds().FirstOrDefault();
 
         bool canResetToSecond = CanResetToSecond(selectedId);
         tsmiResetFileToSelected.Enabled = canResetToSecond;
@@ -999,7 +999,7 @@ partial class FileStatusList
 
                     if (output.Length > 0)
                     {
-                        MessageBox.Show(this, output.ToString(), TranslatedStrings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxes.Show(this, output.ToString(), TranslatedStrings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -1091,9 +1091,9 @@ partial class FileStatusList
 
         ThreadHelper.FileAndForget(async () =>
         {
-            ObjectId? blob = Module.GetFileBlobHash(item.Item.Name, item.SecondRevision.ObjectId);
+            ObjectId blob = Module.GetFileBlobHash(item.Item.Name, item.SecondRevision.ObjectId);
 
-            if (blob is null)
+            if (blob.IsZero)
             {
                 return;
             }
@@ -1184,7 +1184,7 @@ partial class FileStatusList
         }
         else
         {
-            MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(string.Format(_stopTrackingFail.Text, filename), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

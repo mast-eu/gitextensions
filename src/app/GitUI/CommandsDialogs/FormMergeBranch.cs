@@ -37,16 +37,13 @@ public partial class FormMergeBranch : GitModuleForm
         helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
         _defaultBranch = defaultBranch;
 
-        IDetachedSettings detachedSettings = Module.GetEffectiveSettings()
-            .Detached();
+        SettingsSource effectiveSettings = Module.GetEffectiveSettings();
+        IDetachedSettings detachedSettings = effectiveSettings.Detached();
 
         noFastForward.Checked = detachedSettings.NoFastForwardMerge;
 
-        IDetailedSettings detailedSettings = Module.GetEffectiveSettings()
-            .Detailed();
-
-        addLogMessages.Checked = detailedSettings.AddMergeLogMessages;
-        nbMessages.Value = detailedSettings.MergeLogMessagesCount;
+        addLogMessages.Checked = DetailedSettings.AddMergeLogMessages.ValueOrDefault(effectiveSettings);
+        nbMessages.Value = DetailedSettings.MergeLogMessagesCount.ValueOrDefault(effectiveSettings);
 
         advanced.Checked = AppSettings.AlwaysShowAdvOpt;
         advanced_CheckedChanged(this, EventArgs.Empty);
@@ -112,9 +109,10 @@ public partial class FormMergeBranch : GitModuleForm
                                                         mergeMessagePath,
                                                         Module.GetPathForGitExecution,
                                                         addLogMessages.Checked ? (int)nbMessages.Value : (int?)null);
-        success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+        success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true, out string commandOutput);
 
-        bool wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked);
+        bool wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked)
+            || Module.CanContinueAction(commandOutput);
 
         if (success || wasConflict)
         {
@@ -175,10 +173,7 @@ public partial class FormMergeBranch : GitModuleForm
     {
         nbMessages.Enabled = addLogMessages.Checked;
 
-        IDetailedSettings detailedSettings = Module.GetEffectiveSettings()
-            .Detailed();
-
-        detailedSettings.AddMergeLogMessages = addLogMessages.Checked;
+        DetailedSettings.AddMergeLogMessages[Module.GetEffectiveSettings()] = addLogMessages.Checked;
     }
 
     private void addMergeMessage_CheckedChanged(object sender, EventArgs e)
@@ -188,9 +183,6 @@ public partial class FormMergeBranch : GitModuleForm
 
     private void nbMessages_ValueChanged(object sender, EventArgs e)
     {
-        IDetailedSettings detailedSettings = Module.GetEffectiveSettings()
-            .Detailed();
-
-        detailedSettings.MergeLogMessagesCount = Convert.ToInt32(nbMessages.Value);
+        DetailedSettings.MergeLogMessagesCount[Module.GetEffectiveSettings()] = Convert.ToInt32(nbMessages.Value);
     }
 }

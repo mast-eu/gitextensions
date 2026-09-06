@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
@@ -14,7 +12,7 @@ namespace GitUI.CommandsDialogs.Menus;
 /// <summary>
 ///  Represents a split button that contains the recent repositories.
 /// </summary>
-internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITranslate
+internal sealed class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITranslate
 {
     private static readonly TranslationString _noWorkingFolderText = new("No working directory");
     private static readonly TranslationString _configureWorkingDirMenu = new("Co&nfigure this menu...");
@@ -26,7 +24,7 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
         Right click starts the "Open repository" dialog.
         """);
 
-    private class Implementation
+    private sealed class Implementation
     {
         // This is used as Tag in order to mark controls which are to be excluded from the filtering considerations.
         private static readonly object _excludeFromFilterMarker = new();

@@ -1,13 +1,10 @@
-﻿using FluentAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Theming;
 using NSubstitute;
 
 namespace GitUITests.CommandsDialogs.SettingsDialog.Pages;
-
-[TestFixture]
 public class ColorsPageSettingsPageControllerTests
 {
     private ColorSettingsPageTestContext _context = null!;
@@ -196,21 +193,21 @@ public class ColorsPageSettingsPageControllerTests
         {
             ThemeId.WindowsAppColorModeId,
             new[] { ThemeVariations.Colorblind },
-            null // useSystemVisualStyle, depends on Application.SystemColorMode
+            null! // useSystemVisualStyle, depends on Application.SystemColorMode
         };
 
         yield return new object[]
         {
             new ThemeId("non_default", isBuiltin: true),
             new[] { ThemeVariations.Colorblind },
-            null // useSystemVisualStyle, unknown
+            null! // useSystemVisualStyle, unknown
         };
     }
 
     private class MockColorsSettingsPage : IColorsSettingsPage
     {
         public ThemeId SelectedThemeId { get; set; }
-        public string[] SelectedThemeVariations { get; set; }
+        public string[] SelectedThemeVariations { get; set; } = null!;
         public bool UseSystemVisualStyle { get; set; }
         public bool LabelRestartIsNeededVisible { get; set; }
         public bool IsChoosingVisualStyleEnabled { get; set; }

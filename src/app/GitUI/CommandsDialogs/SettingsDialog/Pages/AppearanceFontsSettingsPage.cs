@@ -48,50 +48,57 @@ public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
 
     private void diffFontChangeButton_Click(object sender, EventArgs e)
     {
-        diffFontDialog.Font = _diffFont;
-        DialogResult result = diffFontDialog.ShowDialog(this);
-
-        if (result is (DialogResult.OK or DialogResult.Yes))
+        diffFontDialog.Font = _diffFont!;
+        if (ShowFontDialog(diffFontDialog))
         {
-            Validates.NotNull(diffFontDialog.Font);
             SetCurrentDiffFont(diffFontDialog.Font);
         }
     }
 
     private void applicationFontChangeButton_Click(object sender, EventArgs e)
     {
-        applicationDialog.Font = _applicationFont;
-        DialogResult result = applicationDialog.ShowDialog(this);
-
-        if (result is (DialogResult.OK or DialogResult.Yes))
+        applicationDialog.Font = _applicationFont!;
+        if (ShowFontDialog(applicationDialog))
         {
-            Validates.NotNull(applicationDialog.Font);
             SetCurrentApplicationFont(applicationDialog.Font);
         }
     }
 
     private void commitFontChangeButton_Click(object sender, EventArgs e)
     {
-        commitFontDialog.Font = _commitFont;
-        DialogResult result = commitFontDialog.ShowDialog(this);
-
-        if (result is (DialogResult.OK or DialogResult.Yes))
+        commitFontDialog.Font = _commitFont!;
+        if (ShowFontDialog(commitFontDialog))
         {
-            Validates.NotNull(commitFontDialog.Font);
             SetCurrentCommitFont(commitFontDialog.Font);
         }
     }
 
     private void monospaceFontChangeButton_Click(object sender, EventArgs e)
     {
-        monospaceFontDialog.Font = _monospaceFont;
-        DialogResult result = monospaceFontDialog.ShowDialog(this);
-
-        if (result is (DialogResult.OK or DialogResult.Yes))
+        monospaceFontDialog.Font = _monospaceFont!;
+        if (ShowFontDialog(monospaceFontDialog))
         {
-            Validates.NotNull(monospaceFontDialog.Font);
             SetCurrentMonospaceFont(monospaceFontDialog.Font);
         }
+    }
+
+    private bool ShowFontDialog(FontDialog fontDialog)
+    {
+        try
+        {
+            DialogResult result = fontDialog.ShowDialog(this);
+            if (result is (DialogResult.OK or DialogResult.Yes))
+            {
+                Validates.NotNull(fontDialog.Font);
+                return true;
+            }
+        }
+        catch (ArgumentException ex)
+        {
+            MessageBoxes.ShowError(this, ex.Message);
+        }
+
+        return false;
     }
 
     private void SetCurrentDiffFont(Font newFont)

@@ -80,206 +80,6 @@
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="ta">
-    <body>
-      <trans-unit id="BitbucketBaseUrl.Caption">
-        <source>Specify the base URL to Bitbucket</source>
-        <target>இருமவாளிக்கு அடிப்படை முகவரியைக் குறிப்பிடு</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketDisableSsl.Caption">
-        <source>Disable SSL verification</source>
-        <target>போக்குவரத்துஅடுக்குபாதுகாப்பு சரிபார்ப்பை முடக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketPassword.Caption">
-        <source>Bitbucket Password</source>
-        <target>இருமவாளி கடவுச்சொல்</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketUsername.Caption">
-        <source>Bitbucket Username</source>
-        <target>இருமவாளி பயனர்பெயர்</target>
-        
-      </trans-unit>
-      <trans-unit id="Description.Text">
-        <source>Bitbucket Server</source>
-        <target>இருமவாளி சேவையகம்</target>
-        
-      </trans-unit>
-      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
-        <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>உங்கள் களஞ்சியம் இருமவாளி சேவையகத்தில் இல்லை.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="ta">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Bitbucket Server</source>
-        <target>இருமவாளி சேவையகம்</target>
-        
-      </trans-unit>
-      <trans-unit id="_committed.Text">
-        <source>{0} committed
-{1}</source>
-        <target>{0} உறுதிமொழியப்பட்டது
-{1}</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>பிழை</target>
-        
-      </trans-unit>
-      <trans-unit id="_linkLabelToolTip.Text">
-        <source>Right-click to copy link</source>
-        <target>இணைப்பை நகலெடுக்க வலது சொடுக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="_success.Text">
-        <source>Success</source>
-        <target>வெற்றி</target>
-        
-      </trans-unit>
-      <trans-unit id="btnApprove.Text">
-        <source>Approve</source>
-        <target>இசைவு</target>
-        
-      </trans-unit>
-      <trans-unit id="btnCreate.Text">
-        <source>Create</source>
-        <target>உருவாக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="btnMerge.Text">
-        <source>Merge</source>
-        <target>ஒன்றிணை</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxCreatePullRequest.Text">
-        <source>Pull Request Info</source>
-        <target>இழு கோரிக்கை தகவல்</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxInformation.Text">
-        <source>Information</source>
-        <target>தகவல்</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxPullRequestInfo.Text">
-        <source>Pull Request Info</source>
-        <target>இழு கோரிக்கை தகவல்</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxSource.Text">
-        <source>Source</source>
-        <target>மூலம்</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxSourceRepoView.Text">
-        <source>Source</source>
-        <target>மூலம்</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxTarget.Text">
-        <source>Target</source>
-        <target>இலக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxTargetRepoView.Text">
-        <source>Target</source>
-        <target>இலக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="lblAuthor.Text">
-        <source>Author</source>
-        <target>ஆசிரியர்</target>
-        
-      </trans-unit>
-      <trans-unit id="lblBranchView.Text">
-        <source>Branch</source>
-        <target>கிளை</target>
-        
-      </trans-unit>
-      <trans-unit id="lblDescription.Text">
-        <source>Description</source>
-        <target>விளக்கம்</target>
-        
-      </trans-unit>
-      <trans-unit id="lblDescriptionView.Text">
-        <source>Description</source>
-        <target>விளக்கம்</target>
-        
-      </trans-unit>
-      <trans-unit id="lblRepositoryView.Text">
-        <source>Repository</source>
-        <target>களஞ்சியம்</target>
-        
-      </trans-unit>
-      <trans-unit id="lblReviewerView.Text">
-        <source>Reviewer (approved)</source>
-        <target>விமர்சகர் (அங்கீகரிக்கப்பட்டவர்)</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceBranch.Text">
-        <source>Branch</source>
-        <target>கிளை</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceRepoView.Text">
-        <source>Repository</source>
-        <target>களஞ்சியம்</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceRepository.Text">
-        <source>Repository</source>
-        <target>களஞ்சியம்</target>
-        
-      </trans-unit>
-      <trans-unit id="lblState.Text">
-        <source>State</source>
-        <target>நிலை</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetBranch.Text">
-        <source>Branch</source>
-        <target>கிளை</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetRepoView.Text">
-        <source>Branch</source>
-        <target>கிளை</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetRepository.Text">
-        <source>Repository</source>
-        <target>களஞ்சியம்</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTitle.Text">
-        <source>Title</source>
-        <target>தலைப்பு</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTitleView.Text">
-        <source>Title</source>
-        <target>தலைப்பு</target>
-        
-      </trans-unit>
-      <trans-unit id="tabCreate.Text">
-        <source>Create Pull Request</source>
-        <target>இழு கோரிக்கையை உருவாக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="tabView.Text">
-        <source>View Pull Requests</source>
-        <target>இழு கோரிக்கைகளைப் பார்</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="ta">
     <body>
       <trans-unit id="$this.Text">
@@ -361,16 +161,16 @@
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
-        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>நீக்கக் கிளைகளைத் தேர்ந்தெடு. '{0}' இல் முழுமையாக இணைக்கப்பட்ட கிளைகள் மட்டுமே நீக்கப்படும்.</target>
+        <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
+        <target>நீக்கக் கிளைகளைத் தேர்ந்தெடு. &apos;{0}&apos; இல் முழுமையாக இணைக்கப்பட்ட கிளைகள் மட்டுமே நீக்கப்படும்.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
-Branches will be deleted on the remote '{0}'. This can not be undone.
+Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
         <target>ஆபத்தான செயல்!
-தொலை களஞ்சியமான '{0}' இலிருந்து கிளைகள் அகற்றப்படும். இந்தச் செயலைச் செயல்தவிர்க்க முடியாது.
+தொலை களஞ்சியமான &apos;{0}&apos; இலிருந்து கிளைகள் அகற்றப்படும். இந்தச் செயலைச் செயல்தவிர்க்க முடியாது.
 நீங்கள் நிச்சயமாகத் தொடர விரும்புகிறீர்களா?</target>
         
       </trans-unit>
@@ -395,8 +195,8 @@ Are you sure you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
-        <source>Press '{0}' to search for branches to delete.</source>
-        <target>நீக்குவதற்கான கிளைகளைக் கண்டறிய '{0}' ஐ அழுத்தவும்.</target>
+        <source>Press &apos;{0}&apos; to search for branches to delete.</source>
+        <target>நீக்குவதற்கான கிளைகளைக் கண்டறிய &apos;{0}&apos; ஐ அழுத்தவும்.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
@@ -405,8 +205,8 @@ Are you sure you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
-        <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>'{0}' நெடுவரிசையில் உள்ள தேர்வுப்பெட்டிகளைப் பயன்படுத்தி நீக்கக் கிளைகளைத் தேர்ந்தெடு.</target>
+        <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
+        <target>&apos;{0}&apos; நெடுவரிசையில் உள்ள தேர்வுப்பெட்டிகளைப் பயன்படுத்தி நீக்கக் கிளைகளைத் தேர்ந்தெடு.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -751,144 +551,6 @@ Are you sure you want to continue?</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="ta">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>GitFlow</source>
-        <target>அறிவிலிஓட்டம்</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitFlowTooltip.Text">
-        <source>A good branch model for your project with Git...</source>
-        <target>உங்கள் அறிவிலி திட்டத்திற்கான நல்ல கிளை மாதிரி...</target>
-        
-      </trans-unit>
-      <trans-unit id="_loading.Text">
-        <source>Loading...</source>
-        <target>ஏற்றுகிறது...</target>
-        
-      </trans-unit>
-      <trans-unit id="_noBranchExist.Text">
-        <source>No {0} branches exist.</source>
-        <target>{0} கிளைகள் இல்லை.</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>மூடு</target>
-        
-      </trans-unit>
-      <trans-unit id="btnCreateBranch.Text">
-        <source>Start!</source>
-        <target>தொடங்கு!</target>
-        
-      </trans-unit>
-      <trans-unit id="btnFinish.Text">
-        <source>Finish</source>
-        <target>முடி</target>
-        
-      </trans-unit>
-      <trans-unit id="btnInit.Text">
-        <source>Init GitFlow</source>
-        <target>அறிவிலிஓட்டத்தை துவக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="btnPublish.Text">
-        <source>Publish</source>
-        <target>வெளியிடு</target>
-        
-      </trans-unit>
-      <trans-unit id="btnPull.Text">
-        <source>Pull</source>
-        <target>இழு</target>
-        
-      </trans-unit>
-      <trans-unit id="cbBasedOn.Text">
-        <source>based on:</source>
-        <target>இதன் அடிப்படையில்:</target>
-        
-      </trans-unit>
-      <trans-unit id="cbPushAfterFinish.Text">
-        <source>Push after finish</source>
-        <target>முடிந்த பிறகு தள்ளு</target>
-        
-      </trans-unit>
-      <trans-unit id="cbSquash.Text">
-        <source>Squash</source>
-        <target>பிழி</target>
-        
-      </trans-unit>
-      <trans-unit id="gbManage.Text">
-        <source>Manage existing branches:</source>
-        <target>தற்போதுள்ள கிளைகளை நிர்வகி:</target>
-        
-      </trans-unit>
-      <trans-unit id="gbStart.Text">
-        <source>Start branch:</source>
-        <target>கிளையைத் தொடங்கு:</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>branch:</source>
-        <target>கிளை:</target>
-        
-      </trans-unit>
-      <trans-unit id="label10.Text">
-        <source>Expected name:</source>
-        <target>எதிர்பார்க்கப்படும் பெயர்:</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>command:</source>
-        <target>கட்டளை:</target>
-        
-      </trans-unit>
-      <trans-unit id="label9.Text">
-        <source>Remote to pull from :</source>
-        <target>இதிலிருந்து இழுக்க வேண்டிய தொலை:</target>
-        
-      </trans-unit>
-      <trans-unit id="lblCaptionHead.Text">
-        <source>HEAD:</source>
-        <target>தலை:</target>
-        
-      </trans-unit>
-      <trans-unit id="lblHead.Text">
-        <source>ref/...</source>
-        <target>குறி/...</target>
-        
-      </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
-        <source>[prefix]/</source>
-        <target>[முன்னொட்டு]/</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitFlow.Text">
-        <source>About GitFlow</source>
-        <target>அறிவிலிஓட்டம் பற்றி</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitFlow.ttGitFlow">
-        <source>A good branch model for your project with Git...</source>
-        <target>உங்கள் அறிவிலி திட்டத்திற்கான நல்ல கிளை மாதிரி...</target>
-        
-      </trans-unit>
-      <trans-unit id="panel3.Text">
-        <source>Result of git flow command run</source>
-        <target>அறிவிலி ஓட்டம் கட்டளை இயக்கத்தின் முடிவு</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="ta">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>GitFlow</source>
-        <target>அறிவிலிஓட்டம்</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="ta">
     <body>
       <trans-unit id="Description.Text">
@@ -959,6 +621,35 @@ Are you sure you want to continue?</source>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
         <target>{0}இல் காண்க</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en" target-language="ta">
+    <body>
+      <trans-unit id="lblApiToken.Text">
+        <source>API &amp;Token</source>
+        <target>எபிஐ &amp;அணுகல் அடையாளம்</target>
+        
+      </trans-unit>
+      <trans-unit id="lblApiUrl.Text">
+        <source>&amp;API URL</source>
+        <target>&amp;எபிஐ முகவரி</target>
+        
+      </trans-unit>
+      <trans-unit id="lblOwner.Text">
+        <source>&amp;Owner</source>
+        <target>&amp;உரிமையாளர்</target>
+        
+      </trans-unit>
+      <trans-unit id="lblRepository.Text">
+        <source>&amp;Repository</source>
+        <target>&amp;களஞ்சியம்</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkTokenManagement.Text">
+        <source>Create a GitHub personal access token</source>
+        <target>அறிவிலிமையம் தனிப்பட்ட அணுகல் அடையாளத்தை உருவாக்கு</target>
         
       </trans-unit>
     </body>
@@ -1178,90 +869,6 @@ Do you want to reset the configured path?</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="ta">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Jira Commit Hint</source>
-        <target>சிரா உறுதிமொழி குறிப்பு</target>
-        
-      </trans-unit>
-      <trans-unit id="EmptyQueryResultCaption.Text">
-        <source>First Task Preview</source>
-        <target>முதல் பணி முன்னோட்டம்</target>
-        
-      </trans-unit>
-      <trans-unit id="EmptyQueryResultMessage.Text">
-        <source>[Empty Jira Query Result]</source>
-        <target>[சிரா வெற்றுக் வினவல் முடிவு]</target>
-        
-      </trans-unit>
-      <trans-unit id="InvalidUrlCaption.Text">
-        <source>Invalid Jira url</source>
-        <target>சிரா தவறான முகவரி</target>
-        
-      </trans-unit>
-      <trans-unit id="InvalidUrlMessage.Text">
-        <source>A valid url is required to launch the Jira query helper</source>
-        <target>சிரா வினவல் உதவியாளரைத் தொடங்க சரியான முகவரி தேவை</target>
-        
-      </trans-unit>
-      <trans-unit id="JiraFieldsLabel.Text">
-        <source>Jira fields</source>
-        <target>சிரா புலங்கள்</target>
-        
-      </trans-unit>
-      <trans-unit id="JiraPluginConfigurationErrorText.Text">
-        <source>Jira plugin configuration incomplete!</source>
-        <target>சீரா செருகுநிரல் உள்ளமைவு முழுமையடையவில்லை!</target>
-        
-      </trans-unit>
-      <trans-unit id="PreviewButtonText.Text">
-        <source>Preview</source>
-        <target>முன்னோட்டம்</target>
-        
-      </trans-unit>
-      <trans-unit id="QueryHelperLinkText.Text">
-        <source>Open the query helper inside Jira</source>
-        <target>சிராவிற்குள் வினவல் உதவியாளரைத் திற</target>
-        
-      </trans-unit>
-      <trans-unit id="QueryHelperOpenErrorText.Text">
-        <source>Unable to open Jira query helper</source>
-        <target>சிராவிற்குள் வினவல் உதவியாளரைத் திறக்கமுடியவில்லை</target>
-        
-      </trans-unit>
-      <trans-unit id="_authTypeSettings.Caption">
-        <source>Auth type</source>
-        <target>ஒப்புதல் வகை</target>
-        
-      </trans-unit>
-      <trans-unit id="_credentialsSettings.Caption">
-        <source>Jira credentials</source>
-        <target>சிரா நற்சான்றிதழ்கள்</target>
-        
-      </trans-unit>
-      <trans-unit id="_enabledSettings.Caption">
-        <source>Jira hint plugin enabled</source>
-        <target>சிரா குறிப்பு சொருகி இயக்கப்பட்டிருக்கிறது</target>
-        
-      </trans-unit>
-      <trans-unit id="_jqlQuerySettings.Caption">
-        <source>JQL Query</source>
-        <target>சாவாவினவல்மொழி வினவல்</target>
-        
-      </trans-unit>
-      <trans-unit id="_stringTemplateSetting.Caption">
-        <source>Message Template</source>
-        <target>செய்தி மாதிரி</target>
-        
-      </trans-unit>
-      <trans-unit id="_urlSettings.Caption">
-        <source>Jira URL</source>
-        <target>சிரா முகவரி</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="ta">
     <body>
       <trans-unit id="$this.Text">
@@ -1348,18 +955,18 @@ Do you want to reset the configured path?</source>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
-        <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>'{0}' இலிருந்து '{1}'வரையிலான உறுதிமொழி பதிவு ({2}):</target>
+        <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
+        <target>&apos;{0}&apos; இலிருந்து &apos;{1}&apos;வரையிலான உறுதிமொழி பதிவு ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
-        <source>'From' commit must be specified</source>
-        <target>'இதிலிருந்து' உறுதிமொழி குறிப்பிடப்பட வேண்டும்</target>
+        <source>&apos;From&apos; commit must be specified</source>
+        <target>&apos;இதிலிருந்து&apos; உறுதிமொழி குறிப்பிடப்பட வேண்டும்</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
-        <source>'To' commit must be specified</source>
-        <target>'இதற்கு' உறுதிமொழி குறிப்பிடப்பட வேண்டும்</target>
+        <source>&apos;To&apos; commit must be specified</source>
+        <target>&apos;இதற்கு&apos; உறுதிமொழி குறிப்பிடப்பட வேண்டும்</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1399,7 +1006,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
-        <target>உறுதிமொழி வெளிப்பாடு 'இதற்கு' (உட்பட):</target>
+        <target>உறுதிமொழி வெளிப்பாடு &apos;இதற்கு&apos; (உட்பட):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
@@ -1416,7 +1023,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>உறுதிமொழி வெளிப்பாடு 'இதிலிருந்து' (தவிர்த்து):</target>
+        <target>உறுதிமொழி வெளிப்பாடு &apos;இதிலிருந்து&apos; (தவிர்த்து):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
@@ -1490,7 +1097,7 @@ branch names, tag names)</source>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
@@ -1527,16 +1134,16 @@ Please ensure that the url is valid and that the API token has access to build a
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</source>
         <target>நீங்கள் பின்வரும் நோக்கங்களுடன் ஒரு அடையாளகுறியை உருவாக்க வேண்டும்:
- - 'கட்ட (படிக்க)'
- - 'திட்டம் மற்றும் குழு (படிக்க)'</target>
+ - &apos;கட்ட (படிக்க)&apos;
+ - &apos;திட்டம் மற்றும் குழு (படிக்க)&apos;</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>'கட்டுமான வரையறை பெயர்' வழக்கமான வெளிப்பாடு தவறானது மற்றும் சேமிக்கப்படாது!</target>
+        <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
+        <target>&apos;கட்டுமான வரையறை பெயர்&apos; வழக்கமான வெளிப்பாடு தவறானது மற்றும் சேமிக்கப்படாது!</target>
         
       </trans-unit>
     </body>
@@ -1554,14 +1161,14 @@ Please ensure that the url is valid and that the API token has access to build a
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
         <target>இடைநிலைப் பலகையில் சரியான கட்டுமான முகவரி இல்லை.
 
 மீண்டும் முயற்சிக்கும் முன், கட்டமைப்பின் முகவரியை இடைநிலைப் பலகையில் நகலெடு.
-(குறைந்தது 'கட்டுமானவகைஅடையாளம்' அளவுருவையாவது கொண்டிருக்க வேண்டும்)</target>
+(குறைந்தது &apos;கட்டுமானவகைஅடையாளம்&apos; அளவுருவையாவது கொண்டிருக்க வேண்டும்)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
@@ -1577,7 +1184,7 @@ Please verify the server url.</source>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
         <target>&quot;கட்டுமான அடையாள வடிகட்டி&quot; வழக்கமான வெளிப்பாடு தவறானது மற்றும் சேமிக்கப்படாது!</target>
         
       </trans-unit>

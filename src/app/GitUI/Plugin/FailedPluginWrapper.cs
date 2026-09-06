@@ -13,7 +13,7 @@ internal partial class FailedPluginWrapper : IGitPlugin
     private static partial Regex PluginNameRegex { get; }
 
     private readonly string _exception;
-    private string _pluginName;
+    private string _pluginName = null!;
 
     public FailedPluginWrapper(Exception loadingException)
     {
@@ -27,7 +27,7 @@ internal partial class FailedPluginWrapper : IGitPlugin
             if (match.Success)
             {
                 _pluginName = match.Value;
-                Name = $"{TranslatedStrings.FailedToLoadPlugin}: {_pluginName[..Math.Min(50, match.Value.Length)]}";
+                Name = $"{TranslatedStrings.FailedToLoadPlugin}: {_pluginName[..Math.Min(50, match.ValueSpan.Length)]}";
             }
         }
         catch (Exception)
@@ -45,7 +45,7 @@ internal partial class FailedPluginWrapper : IGitPlugin
 
     public bool Execute(GitUIEventArgs args)
     {
-        DialogResult result = MessageBox.Show(string.Format(TranslatedStrings.FailedToLoadPluginPopupText, _exception),
+        DialogResult result = MessageBoxes.Show(string.Format(TranslatedStrings.FailedToLoadPluginPopupText, _exception),
             TranslatedStrings.FailedToLoadPlugin, MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
         if (result == DialogResult.OK)
         {

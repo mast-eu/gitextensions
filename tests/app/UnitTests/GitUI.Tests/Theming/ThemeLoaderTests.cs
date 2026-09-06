@@ -1,11 +1,8 @@
-﻿using FluentAssertions;
-using GitExtUtils.GitUI.Theming;
+﻿using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using NSubstitute;
 
 namespace GitUITests.Theming;
-
-[TestFixture]
 public class ThemeLoaderTests
 {
     private static readonly IReadOnlyCollection<KnownColor> ThemableSystemColorNames =

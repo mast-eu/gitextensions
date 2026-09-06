@@ -4,15 +4,15 @@ namespace GitExtensions.Extensibility.Git;
 
 public sealed class GitSubmoduleStatus
 {
-    private Func<string, CommitData?> GetCommitData { get; }
+    private Func<string, CommitData?>? GetCommitData { get; }
     private Func<GitSubmoduleStatus, SubmoduleStatus> GetSubmoduleStatus { get; }
     private SubmoduleStatus? _cachedStatus = null;
 
     public string Name { get; }
     public string? OldName { get; }
     public bool IsDirty { get; }
-    public ObjectId? Commit { get; }
-    public ObjectId? OldCommit { get; }
+    public ObjectId Commit { get; }
+    public ObjectId OldCommit { get; }
     public int? AddedCommits { get; }
     public int? RemovedCommits { get; }
 
@@ -34,11 +34,11 @@ public sealed class GitSubmoduleStatus
 
     // Get CommitData without Notes (will cache contents)
     public CommitData? CommitData
-        => GetCommitData is not null && Commit is not null ? GetCommitData(Commit.ToString()) : null;
+        => GetCommitData is not null && !Commit.IsZero ? GetCommitData(Commit.ToString()) : null;
     public CommitData? OldCommitData
-        => GetCommitData is not null && OldCommit is not null ? GetCommitData(OldCommit.ToString()) : null;
+        => GetCommitData is not null && !OldCommit.IsZero ? GetCommitData(OldCommit.ToString()) : null;
 
-    public GitSubmoduleStatus(string name, string? oldName, bool isDirty, ObjectId? commit, ObjectId? oldCommit, int? addedCommits, int? removedCommits, Func<string, CommitData?> getCommitData, Func<GitSubmoduleStatus, SubmoduleStatus> getSubmoduleStatus)
+    public GitSubmoduleStatus(string name, string? oldName, bool isDirty, ObjectId commit, ObjectId oldCommit, int? addedCommits, int? removedCommits, Func<string, CommitData?>? getCommitData, Func<GitSubmoduleStatus, SubmoduleStatus> getSubmoduleStatus)
     {
         ArgumentNullException.ThrowIfNull(name);
         Name = name;

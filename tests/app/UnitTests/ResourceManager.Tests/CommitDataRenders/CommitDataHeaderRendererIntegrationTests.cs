@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
@@ -8,24 +7,23 @@ namespace ResourceManagerTests.CommitDataRenders;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class CommitDataHeaderRendererIntegrationTests
 {
-    private CommitData _data;
-    private CommitDataHeaderRenderer _rendererTabs;
-    private CommitDataHeaderRenderer _rendererSpaces;
+    private CommitData _data = null!;
+    private CommitDataHeaderRenderer _rendererTabs = null!;
+    private CommitDataHeaderRenderer _rendererSpaces = null!;
 
     [SetUp]
     public void Setup()
     {
-        ObjectId commitGuid = ObjectId.Random();
+        ObjectId commitId = ObjectId.Random();
         ObjectId parentId1 = ObjectId.Random();
         ObjectId parentId2 = ObjectId.Random();
         DateTime authorTime = DateTime.UtcNow.AddDays(-3);
         DateTime commitTime = DateTime.UtcNow.AddDays(-2);
 
         _data = new CommitData(
-            commitGuid,
+            commitId,
             new[] { parentId1, parentId2 },
             "John Doe (Acme Inc) <John.Doe@test.com>", authorTime,
             "Jane Doe <Jane.Doe@test.com>", commitTime,
@@ -52,12 +50,12 @@ public class CommitDataHeaderRendererIntegrationTests
                              "Commit date:	2 days ago (" + LocalizationHelpers.GetFullDateString(_data.CommitDate) + ")" + Environment.NewLine +
                              "Commit hash:	" + _data.ObjectId + Environment.NewLine +
                              "Children:	" +
-                               "<a href='gitext://gotocommit/" + _data.ChildIds[0] + "'>" + _data.ChildIds[0].ToShortString() + "</a> " +
-                               "<a href='gitext://gotocommit/" + _data.ChildIds[1] + "'>" + _data.ChildIds[1].ToShortString() + "</a> " +
-                               "<a href='gitext://gotocommit/" + _data.ChildIds[2] + "'>" + _data.ChildIds[2].ToShortString() + "</a>" + Environment.NewLine +
+                               "<a href='gitext://gotocommit/" + _data.ChildIds![0] + "'>" + _data.ChildIds![0].ToShortString() + "</a> " +
+                               "<a href='gitext://gotocommit/" + _data.ChildIds![1] + "'>" + _data.ChildIds![1].ToShortString() + "</a> " +
+                               "<a href='gitext://gotocommit/" + _data.ChildIds![2] + "'>" + _data.ChildIds![2].ToShortString() + "</a>" + Environment.NewLine +
                              "Parents:		" +
-                               "<a href='gitext://gotocommit/" + _data.ParentIds[0] + "'>" + _data.ParentIds[0].ToShortString() + "</a> " +
-                               "<a href='gitext://gotocommit/" + _data.ParentIds[1] + "'>" + _data.ParentIds[1].ToShortString() + "</a>";
+                               "<a href='gitext://gotocommit/" + _data.ParentIds![0] + "'>" + _data.ParentIds![0].ToShortString() + "</a> " +
+                               "<a href='gitext://gotocommit/" + _data.ParentIds![1] + "'>" + _data.ParentIds![1].ToShortString() + "</a>";
 
         string result = _rendererTabs.Render(_data, true);
 
@@ -73,12 +71,12 @@ public class CommitDataHeaderRendererIntegrationTests
                              "Commit date:	2 days ago (" + LocalizationHelpers.GetFullDateString(_data.CommitDate) + ")" + Environment.NewLine +
                              "Commit hash:	" + _data.ObjectId + Environment.NewLine +
                              "Children:	" +
-                               _data.ChildIds[0].ToShortString() + " " +
-                               _data.ChildIds[1].ToShortString() + " " +
-                               _data.ChildIds[2].ToShortString() + Environment.NewLine +
+                               _data.ChildIds![0].ToShortString() + " " +
+                               _data.ChildIds![1].ToShortString() + " " +
+                               _data.ChildIds![2].ToShortString() + Environment.NewLine +
                              "Parents:		" +
-                               _data.ParentIds[0].ToShortString() + " " +
-                               _data.ParentIds[1].ToShortString();
+                               _data.ParentIds![0].ToShortString() + " " +
+                               _data.ParentIds![1].ToShortString();
 
         string result = _rendererTabs.Render(_data, false);
 
@@ -94,12 +92,12 @@ public class CommitDataHeaderRendererIntegrationTests
                              "Commit date: 2 days ago (" + LocalizationHelpers.GetFullDateString(_data.CommitDate) + ")" + Environment.NewLine +
                              "Commit hash: " + _data.ObjectId + Environment.NewLine +
                              "Children:    " +
-                               "<a href='gitext://gotocommit/" + _data.ChildIds[0] + "'>" + _data.ChildIds[0].ToShortString() + "</a> " +
-                               "<a href='gitext://gotocommit/" + _data.ChildIds[1] + "'>" + _data.ChildIds[1].ToShortString() + "</a> " +
-                               "<a href='gitext://gotocommit/" + _data.ChildIds[2] + "'>" + _data.ChildIds[2].ToShortString() + "</a>" + Environment.NewLine +
+                               "<a href='gitext://gotocommit/" + _data.ChildIds![0] + "'>" + _data.ChildIds![0].ToShortString() + "</a> " +
+                               "<a href='gitext://gotocommit/" + _data.ChildIds![1] + "'>" + _data.ChildIds![1].ToShortString() + "</a> " +
+                               "<a href='gitext://gotocommit/" + _data.ChildIds![2] + "'>" + _data.ChildIds![2].ToShortString() + "</a>" + Environment.NewLine +
                              "Parents:     " +
-                               "<a href='gitext://gotocommit/" + _data.ParentIds[0] + "'>" + _data.ParentIds[0].ToShortString() + "</a> " +
-                               "<a href='gitext://gotocommit/" + _data.ParentIds[1] + "'>" + _data.ParentIds[1].ToShortString() + "</a>";
+                               "<a href='gitext://gotocommit/" + _data.ParentIds![0] + "'>" + _data.ParentIds![0].ToShortString() + "</a> " +
+                               "<a href='gitext://gotocommit/" + _data.ParentIds![1] + "'>" + _data.ParentIds![1].ToShortString() + "</a>";
 
         string result = _rendererSpaces.Render(_data, true);
 
@@ -115,12 +113,12 @@ public class CommitDataHeaderRendererIntegrationTests
                              "Commit date: 2 days ago (" + LocalizationHelpers.GetFullDateString(_data.CommitDate) + ")" + Environment.NewLine +
                              "Commit hash: " + _data.ObjectId + Environment.NewLine +
                              "Children:    " +
-                               _data.ChildIds[0].ToShortString() + " " +
-                               _data.ChildIds[1].ToShortString() + " " +
-                               _data.ChildIds[2].ToShortString() + Environment.NewLine +
+                               _data.ChildIds![0].ToShortString() + " " +
+                               _data.ChildIds![1].ToShortString() + " " +
+                               _data.ChildIds![2].ToShortString() + Environment.NewLine +
                              "Parents:     " +
-                               _data.ParentIds[0].ToShortString() + " " +
-                               _data.ParentIds[1].ToShortString();
+                               _data.ParentIds![0].ToShortString() + " " +
+                               _data.ParentIds![1].ToShortString();
 
         string result = _rendererSpaces.Render(_data, false);
 

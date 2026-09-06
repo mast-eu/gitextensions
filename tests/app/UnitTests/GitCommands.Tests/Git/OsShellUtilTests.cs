@@ -4,12 +4,10 @@ using GitExtensions.Extensibility;
 using NSubstitute;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class OsShellUtilTests
 {
-    private IExecutable _executable;
-    private IProcess _process;
+    private IExecutable _executable = null!;
+    private IProcess _process = null!;
 
     [SetUp]
     public void SetUp()
@@ -33,6 +31,7 @@ public class OsShellUtilTests
     [TearDown]
     public void TearDown()
     {
+        _process?.Dispose();
         OsShellUtil.TestAccessor.MockExecutable = null;
     }
 

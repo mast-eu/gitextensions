@@ -36,10 +36,14 @@ public partial class AnsiEscapeUtilities
         rawSb.Append("\nnormal, normal dim, bold, bold dim, bold bold, bold bold dim\nFor foreground, background choosen by GE\nNote: GE configures black foreground for bold yellow/blue/magenta/cyan\nGenerated from AnsiEscapeUtilities.cs PrintColors());\n\n");
         sb.Append('\n');
 
+        ReadOnlySpan<int> dims = [0, 2];
+        ReadOnlySpan<int> bolds = [0, 1];
+        ReadOnlySpan<int> codes = [30, 90, 40, 100];
+
         // color id (standard) colors
-        foreach (int code in new List<int> { 30, 90, 40, 100 })
+        foreach (int code in codes)
         {
-            foreach (int bold in new List<int> { 0, 1 })
+            foreach (int bold in bolds)
             {
                 if (bold == 0 && code >= 90)
                 {
@@ -47,7 +51,7 @@ public partial class AnsiEscapeUtilities
                     continue;
                 }
 
-                foreach (int dim in new List<int>() { 0, 2 })
+                foreach (int dim in dims)
                 {
                     List<int> sequence = [0];
                     if (bold > 0)
@@ -60,13 +64,14 @@ public partial class AnsiEscapeUtilities
                         sequence.Add(dim);
                     }
 
-                    rawSb.Append($"""{(bold > 0 ? "b" : " ")} {(dim > 0 ? "d" : " ")} {code,3} """);
-                    sb.Append($"""{(bold > 0 ? "b" : " ")} {(dim > 0 ? "d" : " ")} {code,3} """);
+                    string appendString = $"{(bold > 0 ? "b" : " ")} {(dim > 0 ? "d" : " ")} {code,3} ";
+                    rawSb.Append(appendString);
+                    sb.Append(appendString);
                     for (int i = _blackId; i <= _whiteId; i++)
                     {
                         sb.Append("@!");
                         sequence.Add(i + code);
-                        rawSb.Append($"\x1b[{string.Join(';', sequence)}m@!\x1b[0m");
+                        rawSb.Append("\x1b[").AppendJoin(';', sequence).Append("m@!\x1b[0m");
                         TryGetColorsFromEscapeSequence(sequence, out Color? backColor, out Color? foreColor, ref currentColorId, themeColors: false);
                         if (TryGetTextMarker(new()
                                 {
@@ -77,9 +82,9 @@ public partial class AnsiEscapeUtilities
                                 },
                                 prevMarker: null,
                                 sb,
-                                out TextMarker tm))
+                                out TextMarker? tm))
                         {
-                            textMarkers.Add(tm);
+                            textMarkers.Add(tm!);
                         }
                     }
 
@@ -117,11 +122,11 @@ public partial class AnsiEscapeUtilities
 
         for (Match match = EscapeRegex.Match(text); match.Success; match = match.NextMatch())
         {
-            sb.Append(text[prevLineOffset..match.Index]);
+            sb.Append(text.AsSpan(prevLineOffset, match.Index - prevLineOffset));
             prevLineOffset = match.Index + match.Length;
 
             // An escape sequence can include several attributes (empty/unparsable is break).
-            List<int> escapeCodes = [.. match.Groups["escNo"].Captures.Select(i => int.TryParse(i.ToString(), out int attribute) ? attribute : 0)];
+            List<int> escapeCodes = [.. match.Groups["escNo"].Captures.Select(i => int.TryParse(i.ValueSpan, out int attribute) ? attribute : 0)];
 
             if (TryGetColorsFromEscapeSequence(escapeCodes, out Color? backColor, out Color? foreColor, ref currentColorId, themeColors))
             {
@@ -181,9 +186,9 @@ public partial class AnsiEscapeUtilities
 
             currentHighlight.Length = len;
             TextMarker? prevMarker = textMarkers.Count == 0 ? null : textMarkers[^1];
-            if (TryGetTextMarker(currentHighlight, prevMarker, sb, out TextMarker tm))
+            if (TryGetTextMarker(currentHighlight, prevMarker, sb, out TextMarker? tm))
             {
-                textMarkers.Add(tm);
+                textMarkers.Add(tm!);
             }
 
             currentHighlight.Length = -1;
@@ -402,9 +407,9 @@ public partial class AnsiEscapeUtilities
             backColor = Get8bitColor(currentBack, fore: false, bold, dim);
         }
 
-        if (backColor is not null && foreColor is null)
+        if (backColor is Color back && foreColor is null)
         {
-            foreColor = ColorHelper.GetForeColorForBackColor((Color)backColor);
+            foreColor = back.GetTextColor();
         }
 
         // Set result if there are changes
@@ -508,12 +513,12 @@ public partial class AnsiEscapeUtilities
 
         if (extraBold)
         {
-            color = color.MakeBackgroundDarkerBy(-0.1);
+            color = color.MakeDarkerBy(-0.1);
         }
 
         if (dim)
         {
-            color = ColorHelper.DimColor(color);
+            color = color.DimColor();
         }
 
         return color;

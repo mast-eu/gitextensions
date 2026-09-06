@@ -28,7 +28,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
 
         InitializeComponent();
 
-        pictureBox1.Image = DpiUtil.Scale(pictureBox1.Image);
+        pictureBox1.Image = DpiUtil.Scale(pictureBox1.Image!);
         lblResetBranchWarning.AutoSize = true;
         lblResetBranchWarning.Dock = DockStyle.Fill;
         lblResetBranchWarning.SetForeColorForBackColor();
@@ -46,7 +46,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
         Ok.Enabled = false;
     }
 
-    private void Application_Idle(object sender, EventArgs e)
+    private void Application_Idle(object? sender, EventArgs e)
     {
         Application.Idle -= Application_Idle;
 
@@ -86,7 +86,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
         InitLocalBranchesWithoutCurrent();
 
         Branches.DisplayMember = nameof(IGitRef.Name);
-        Branches.Items.AddRange(_localGitRefs);
+        Branches.Items.AddRange(_localGitRefs!);
 
         commitSummaryUserControl.Revision = _revision;
 
@@ -95,10 +95,10 @@ public partial class FormResetAnotherBranch : GitModuleForm
 
     private void Ok_Click(object sender, EventArgs e)
     {
-        IGitRef gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
+        IGitRef? gitRefToReset = _localGitRefs!.FirstOrDefault(b => b.Name == Branches.Text);
         if (gitRefToReset is null)
         {
-            MessageBox.Show(string.Format(_localRefInvalid.Text, Branches.Text), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(string.Format(_localRefInvalid.Text, Branches.Text), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -164,7 +164,12 @@ public partial class FormResetAnotherBranch : GitModuleForm
 
         ThreadHelper.FileAndForget(async () =>
         {
-            ArgumentString command = Commands.PushLocal(gitRefToReset.CompleteName, _revision.ObjectId, Module.WorkingDir, Module.GetPathForGitExecution, ForceReset.Checked, dryRun: true);
+            ArgumentString command = new GitExtUtils.GitArgumentBuilder("merge-base")
+            {
+                "--is-ancestor",
+                gitRefToReset.CompleteName.QuoteNE(),
+                _revision.ObjectId,
+            };
             ExecutionResult executionResult = await Module.GitExecutable.ExecuteAsync(command, throwOnErrorExit: false, cancellationToken: cancellationToken);
 
             await this.SwitchToMainThreadAsync(cancellationToken);

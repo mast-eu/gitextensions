@@ -39,6 +39,7 @@ internal sealed class TranslatedStrings : Translate
     private readonly TranslationString _tagsText = new("Tags");
     private readonly TranslationString _stashesText = new("Stashes");
     private readonly TranslationString _submodulesText = new("Submodules");
+    private readonly TranslationString _worktreesText = new("Worktrees");
     private readonly TranslationString _bodyNotLoaded = new("\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.");
     private readonly TranslationString _searchingFor = new("Searching for: ");
     private readonly TranslationString _loadingDataText = new("Loading data...");
@@ -61,6 +62,13 @@ internal sealed class TranslatedStrings : Translate
     private readonly TranslationString _errorCaptionFailedDeleteFile = new("Failed to delete file");
     private readonly TranslationString _errorCaptionFailedDeleteFolder = new("Failed to delete directory");
     private readonly TranslationString _errorCaptionNotOnBranch = new("Not on a branch");
+
+    private readonly TranslationString _isLocalBranch = new("is a local branch");
+    private readonly TranslationString _isRemoteBranch = new("is a remote branch");
+    private readonly TranslationString _isTag = new("is a tag");
+    private readonly TranslationString _isTrackedBy_Branch_AheadBehind = new("is tracked by [{0}]   {1}");
+    private readonly TranslationString _isTracking_Remote = new("is tracking [{0}]");
+    private readonly TranslationString _wasTracking_Remote = new("was tracking [{0}], but the remote is gone");
 
     private readonly TranslationString _mainInstructionNotOnBranch = new("You are not working on a branch");
 
@@ -134,6 +142,18 @@ the last selected commit.");
     private readonly TranslationString _stashDropConfirmTitle = new("Drop Stash Confirmation");
     private readonly TranslationString _cannotBeUndone = new("This action cannot be undone.");
     private readonly TranslationString _areYouSure = new("Are you sure you want to drop the stash? This action cannot be undone.");
+
+    private readonly TranslationString _switchWorktreeConfirmation = new("Switch to worktree at {0}?");
+    private readonly TranslationString _switchWorktreeCaption = new("Open worktree");
+    private readonly TranslationString _deleteWorktreeConfirmation = new("Are you sure you want to delete the worktree at {0}?");
+    private readonly TranslationString _deleteWorktreeCaption = new("Delete worktree");
+    private readonly TranslationString _deleteWorktreeFailed = new("Failed to delete worktree: {0}");
+
+    private readonly TranslationString _createWorktree = new("Create worktree...");
+    private readonly TranslationString _pruneWorktrees = new("Prune worktrees");
+    private readonly TranslationString _manageWorktrees = new("Manage worktrees...");
+    private readonly TranslationString _worktreeDirectoryNotFound = new("Worktree directory does not exist: {0}");
+
     private readonly TranslationString _nonexistingGitRevision = new("Git revision does not exist");
     private readonly TranslationString _ignoringReference = new("\"{0}\" is not a Git revision and will be ignored.");
 
@@ -226,6 +246,7 @@ Copy error details to clipboard?");
     public static string Tags => _instance.Value._tagsText.Text;
     public static string Stashes => _instance.Value._stashesText.Text;
     public static string Submodules => _instance.Value._submodulesText.Text;
+    public static string Worktrees => _instance.Value._worktreesText.Text;
 
     public static string BodyNotLoaded => _instance.Value._bodyNotLoaded.Text;
     public static string SearchingFor => _instance.Value._searchingFor.Text;
@@ -259,6 +280,13 @@ Copy error details to clipboard?");
     public static string ErrorSshPuTTYInstalled => _instance.Value._errorSshPuTTYInstalled.Text;
     public static string ErrorSshPuTTYNotConfigured => _instance.Value._errorSshPuTTYNotConfigured.Text;
     public static string ErrorSshPuTTYWhereConfigure => _instance.Value._errorSshPuTTYWhereConfigure.Text;
+
+    public static string IsLocalBranch => _instance.Value._isLocalBranch.Text;
+    public static string IsRemoteBranch => _instance.Value._isRemoteBranch.Text;
+    public static string IsTag => _instance.Value._isTag.Text;
+    public static string IsTrackedBy_Branch_AheadBehind => _instance.Value._isTrackedBy_Branch_AheadBehind.Text;
+    public static string IsTracking_Remote => _instance.Value._isTracking_Remote.Text;
+    public static string WasTracking_Remote => _instance.Value._wasTracking_Remote.Text;
 
     public static string ErrorInstructionNotOnBranch => _instance.Value._mainInstructionNotOnBranch.Text;
 
@@ -339,6 +367,17 @@ Copy error details to clipboard?");
     public static string StashDropConfirmTitle => _instance.Value._stashDropConfirmTitle.Text;
     public static string CannotBeUndone => _instance.Value._cannotBeUndone.Text;
     public static string AreYouSure => _instance.Value._areYouSure.Text;
+
+    public static string SwitchWorktreeConfirmation => _instance.Value._switchWorktreeConfirmation.Text;
+    public static string SwitchWorktreeCaption => _instance.Value._switchWorktreeCaption.Text;
+    public static string DeleteWorktreeConfirmation => _instance.Value._deleteWorktreeConfirmation.Text;
+    public static string DeleteWorktreeCaption => _instance.Value._deleteWorktreeCaption.Text;
+    public static string DeleteWorktreeFailed => _instance.Value._deleteWorktreeFailed.Text;
+
+    public static string CreateWorktree => _instance.Value._createWorktree.Text;
+    public static string PruneWorktrees => _instance.Value._pruneWorktrees.Text;
+    public static string ManageWorktrees => _instance.Value._manageWorktrees.Text;
+    public static string WorktreeDirectoryNotFound => _instance.Value._worktreeDirectoryNotFound.Text;
     public static string NonexistingGitRevision => _instance.Value._nonexistingGitRevision.Text;
     public static string IgnoringReference => _instance.Value._ignoringReference.Text;
 

@@ -63,8 +63,6 @@ public sealed class Executable : IExecutable
         return new ProcessWrapper(fileName, PrefixArguments, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit, cancellationToken);
     }
 
-    public string GetWorkingDirectory() => _workingDir;
-
     #region ProcessWrapper
 
     /// <summary>
@@ -146,7 +144,17 @@ public sealed class Executable : IExecutable
 
             try
             {
-                _process.Start();
+                try
+                {
+                    _process.Start();
+                }
+                catch (Exception ex)
+                {
+                    _process.Exited -= OnProcessExit;
+                    _exitHandlerRemoved = true;
+                    _exitTaskCompletionSource.TrySetException(ex);
+                    throw;
+                }
 
                 if (_errorOutputStream is not null)
                 {
@@ -209,7 +217,7 @@ public sealed class Executable : IExecutable
 
             string? ReadErrorOutput()
             {
-                if (_errorOutputStream is null)
+                if (_errorOutputStream is null || _errorEncoding is null)
                 {
                     return null;
                 }
@@ -227,7 +235,7 @@ public sealed class Executable : IExecutable
             }
         }
 
-        private void OnProcessExit(object sender, EventArgs eventArgs)
+        private void OnProcessExit(object? sender, EventArgs eventArgs)
         {
             lock (_lock)
             {

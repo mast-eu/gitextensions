@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using GitCommands;
+﻿using GitCommands;
 
 namespace GitUITests.UserControls.CommitInfo;
 
@@ -15,7 +14,7 @@ public class BranchComparerTests
 
         List<string> expectedBranches =
         [
-            currentBranch,
+            currentBranch!,
 
             // local branch important
             // order 0
@@ -74,15 +73,15 @@ public class BranchComparerTests
             expectedBranches.RemoveAt(0);
         }
 
-        List<string> branches = [.. expectedBranches];
+        string[] branches = [.. expectedBranches];
 
         SortAndCheckListsForEquality();
 
-        branches.Sort();
+        Array.Sort(branches);
 
         SortAndCheckListsForEquality();
 
-        branches.Reverse();
+        Array.Reverse(branches);
 
         SortAndCheckListsForEquality();
 
@@ -90,10 +89,10 @@ public class BranchComparerTests
 
         void SortAndCheckListsForEquality()
         {
-            branches.Sort(new GitUI.CommitInfo.CommitInfo.BranchComparer(branches, currentBranch ?? ""));
+            Array.Sort(branches, new GitUI.CommitInfo.CommitInfo.BranchComparer(branches, currentBranch ?? ""));
 
             branches.Should().HaveCount(expectedBranches.Count);
-            for (int index = 0; index < branches.Count; ++index)
+            for (int index = 0; index < branches.Length; ++index)
             {
                 branches[index].Should().BeSameAs(expectedBranches[index]);
             }

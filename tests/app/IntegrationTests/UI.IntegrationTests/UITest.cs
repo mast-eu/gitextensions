@@ -20,7 +20,7 @@ public static class UITest
         await idleCompletionSource.Task;
         Application.Idle -= HandleApplicationIdle;
 
-        void HandleApplicationIdle(object sender, EventArgs e)
+        void HandleApplicationIdle(object? sender, EventArgs e)
         {
             idleCompletionSource.TrySetResult(default);
         }
@@ -32,12 +32,12 @@ public static class UITest
         bool debug = false)
         where T : Form
     {
-        ClassicAssert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) before test");
+        Application.OpenForms.OfType<T>().Should().BeEmpty($"{Application.OpenForms.OfType<T>().Count()} open form(s) before test");
 
         // Needed for FormBrowse, ScriptOptionsParser
         ManagedExtensibility.Initialise();
 
-        T form = null;
+        T? form = null;
         try
         {
             // Start runTestAsync before calling showForm, since the latter might block until the form is closed.
@@ -81,7 +81,7 @@ public static class UITest
         finally
         {
             form?.Dispose();
-            ClassicAssert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) after test");
+            Application.OpenForms.OfType<T>().Should().BeEmpty($"{Application.OpenForms.OfType<T>().Count()} open form(s) after test");
         }
 
         return;
@@ -100,16 +100,16 @@ public static class UITest
         Func<T, Task> runTestAsync)
         where T : Control
     {
-        T control = null;
+        T? control = null;
         RunForm<Form>(
             showForm: () =>
             {
                 Form form = new() { Text = $"Test {typeof(T).Name}" };
                 control = createControl(form);
-                ClassicAssert.True(form.Controls.Contains(control));
+                form.Controls.Contains(control).Should().BeTrue();
                 Application.Run(form);
             },
-            runTestAsync: form => runTestAsync(control));
+            runTestAsync: form => runTestAsync(control!));
     }
 
     public static void ProcessUntil(string processName, Func<bool> condition, int maxMilliseconds = 1500)

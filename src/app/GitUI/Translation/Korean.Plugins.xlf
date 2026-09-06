@@ -19,7 +19,7 @@
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>빌드하시겠습니까{0}? 
+        <target>{0}을(를) 빌드하시겠습니까?
 
 {1}</target>
         
@@ -76,206 +76,6 @@
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
         <target>실행할 git 명령의 매개변수</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="ko">
-    <body>
-      <trans-unit id="BitbucketBaseUrl.Caption">
-        <source>Specify the base URL to Bitbucket</source>
-        <target>Bitbucket 에 기본 URL 설정</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketDisableSsl.Caption">
-        <source>Disable SSL verification</source>
-        <target>SSL 인증 비활성화</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketPassword.Caption">
-        <source>Bitbucket Password</source>
-        <target>Bitbucket 패스워드</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketUsername.Caption">
-        <source>Bitbucket Username</source>
-        <target>Bitbucket 사용자명</target>
-        
-      </trans-unit>
-      <trans-unit id="Description.Text">
-        <source>Bitbucket Server</source>
-        <target>Bitbucket 서버</target>
-        
-      </trans-unit>
-      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
-        <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>당신의 리포지토리는 BitBucket 서버에서 호스트되지 않습니다.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="ko">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Bitbucket Server</source>
-        <target>Bitbucket 서버</target>
-        
-      </trans-unit>
-      <trans-unit id="_committed.Text">
-        <source>{0} committed
-{1}</source>
-        <target>{0} 커밋됨
-{1}</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>오류</target>
-        
-      </trans-unit>
-      <trans-unit id="_linkLabelToolTip.Text">
-        <source>Right-click to copy link</source>
-        <target>링크를 복사하기 위해 우클릭하세요</target>
-        
-      </trans-unit>
-      <trans-unit id="_success.Text">
-        <source>Success</source>
-        <target>성공</target>
-        
-      </trans-unit>
-      <trans-unit id="btnApprove.Text">
-        <source>Approve</source>
-        <target>승인</target>
-        
-      </trans-unit>
-      <trans-unit id="btnCreate.Text">
-        <source>Create</source>
-        <target>생성</target>
-        
-      </trans-unit>
-      <trans-unit id="btnMerge.Text">
-        <source>Merge</source>
-        <target>머지</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxCreatePullRequest.Text">
-        <source>Pull Request Info</source>
-        <target>Pull Request 정보</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxInformation.Text">
-        <source>Information</source>
-        <target>정보</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxPullRequestInfo.Text">
-        <source>Pull Request Info</source>
-        <target>Pull Request 정보</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxSource.Text">
-        <source>Source</source>
-        <target>소스</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxSourceRepoView.Text">
-        <source>Source</source>
-        <target>소스</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxTarget.Text">
-        <source>Target</source>
-        <target>타겟</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxTargetRepoView.Text">
-        <source>Target</source>
-        <target>타겟</target>
-        
-      </trans-unit>
-      <trans-unit id="lblAuthor.Text">
-        <source>Author</source>
-        <target>작성자</target>
-        
-      </trans-unit>
-      <trans-unit id="lblBranchView.Text">
-        <source>Branch</source>
-        <target>브랜치</target>
-        
-      </trans-unit>
-      <trans-unit id="lblDescription.Text">
-        <source>Description</source>
-        <target>설명</target>
-        
-      </trans-unit>
-      <trans-unit id="lblDescriptionView.Text">
-        <source>Description</source>
-        <target>설명</target>
-        
-      </trans-unit>
-      <trans-unit id="lblRepositoryView.Text">
-        <source>Repository</source>
-        <target>리포지토리</target>
-        
-      </trans-unit>
-      <trans-unit id="lblReviewerView.Text">
-        <source>Reviewer (approved)</source>
-        <target>검토자 (승인됨)</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceBranch.Text">
-        <source>Branch</source>
-        <target>브랜치</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceRepoView.Text">
-        <source>Repository</source>
-        <target>리포지토리</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceRepository.Text">
-        <source>Repository</source>
-        <target>리포지토리</target>
-        
-      </trans-unit>
-      <trans-unit id="lblState.Text">
-        <source>State</source>
-        <target>상태</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetBranch.Text">
-        <source>Branch</source>
-        <target>브랜치</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetRepoView.Text">
-        <source>Branch</source>
-        <target>브랜치</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetRepository.Text">
-        <source>Repository</source>
-        <target>리포지토리</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTitle.Text">
-        <source>Title</source>
-        <target>제목</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTitleView.Text">
-        <source>Title</source>
-        <target>제목</target>
-        
-      </trans-unit>
-      <trans-unit id="tabCreate.Text">
-        <source>Create Pull Request</source>
-        <target>Pull Request 생성</target>
-        
-      </trans-unit>
-      <trans-unit id="tabView.Text">
-        <source>View Pull Requests</source>
-        <target>Pull Request 보기</target>
         
       </trans-unit>
     </body>
@@ -361,16 +161,16 @@
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
-        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>제거할 브랜치를 선택하십시오. '{0}'에 완전히 머지된 브랜치만 제거됩니다.</target>
+        <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
+        <target>제거할 브랜치를 선택하십시오. &apos;{0}&apos;에 완전히 머지된 브랜치만 제거됩니다.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
-Branches will be deleted on the remote '{0}'. This can not be undone.
+Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
         <target>위험한 동작입니다!
-원격 '{0}'에서 브랜치는 삭제될 것입니다. 이것은 되돌릴 수 없습니다. 
+원격 &apos;{0}&apos;에서 브랜치는 삭제될 것입니다. 이것은 되돌릴 수 없습니다. 
 정말로 계속할까요?</target>
         
       </trans-unit>
@@ -395,8 +195,8 @@ Are you sure you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
-        <source>Press '{0}' to search for branches to delete.</source>
-        <target>삭제할 브랜치를 찾으려면 '{0}' 누름.</target>
+        <source>Press &apos;{0}&apos; to search for branches to delete.</source>
+        <target>삭제할 브랜치를 찾으려면 &apos;{0}&apos; 누름.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
@@ -405,8 +205,8 @@ Are you sure you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
-        <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>'{0}' 열의 체크박스를 사용하여 삭제할 브랜치를 선택합니다.</target>
+        <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
+        <target>&apos;{0}&apos; 열의 체크박스를 사용하여 삭제할 브랜치를 선택합니다.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -446,7 +246,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="regexFilter.Text">
         <source>/(feature|develop)/</source>
-        <target>/(기능|개발)/</target>
+        <target>/(feature|develop)/</target>
         
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
@@ -559,7 +359,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>파일을 삭제하기전에 현재 변경을 리셋하세오. 삭제할 파일을 선택합니다. 원격 리포지토리의 데이터를 변경하려면 force push 해야함.</target>
+        <target>파일을 삭제하기 전에 현재 변경을 리셋하세요. 삭제할 파일을 선택합니다. 원격 리포지토리의 데이터를 변경하려면 force push 해야함.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
@@ -657,7 +457,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>{0:N0} 주석 줄({1:P1})</target>
+        <target>{0:N0} 주석 줄 ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
@@ -736,7 +536,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
         <source>{0} ({1} Commits, {2} Changed Lines)</source>
-        <target>{0}({1} 커밋, {2} 라인 변경)</target>
+        <target>{0} ({1} 커밋, {2} 라인 변경)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
@@ -747,144 +547,6 @@ Are you sure you want to continue?</source>
       <trans-unit id="lblAuthor.Text">
         <source>Author</source>
         <target>작성자</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="ko">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>GitFlow</source>
-        <target>GitFlow</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitFlowTooltip.Text">
-        <source>A good branch model for your project with Git...</source>
-        <target>Git 프로젝트를 위한 좋은 브랜치 모델...</target>
-        
-      </trans-unit>
-      <trans-unit id="_loading.Text">
-        <source>Loading...</source>
-        <target>로딩...</target>
-        
-      </trans-unit>
-      <trans-unit id="_noBranchExist.Text">
-        <source>No {0} branches exist.</source>
-        <target>{0} 분기가 없습니다.</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>닫기</target>
-        
-      </trans-unit>
-      <trans-unit id="btnCreateBranch.Text">
-        <source>Start!</source>
-        <target>시작!</target>
-        
-      </trans-unit>
-      <trans-unit id="btnFinish.Text">
-        <source>Finish</source>
-        <target>종료</target>
-        
-      </trans-unit>
-      <trans-unit id="btnInit.Text">
-        <source>Init GitFlow</source>
-        <target>GitFlow 초기화</target>
-        
-      </trans-unit>
-      <trans-unit id="btnPublish.Text">
-        <source>Publish</source>
-        <target>발행</target>
-        
-      </trans-unit>
-      <trans-unit id="btnPull.Text">
-        <source>Pull</source>
-        <target>Pull</target>
-        
-      </trans-unit>
-      <trans-unit id="cbBasedOn.Text">
-        <source>based on:</source>
-        <target>기반:</target>
-        
-      </trans-unit>
-      <trans-unit id="cbPushAfterFinish.Text">
-        <source>Push after finish</source>
-        <target>finish 한후 push</target>
-        
-      </trans-unit>
-      <trans-unit id="cbSquash.Text">
-        <source>Squash</source>
-        <target>Squash</target>
-        
-      </trans-unit>
-      <trans-unit id="gbManage.Text">
-        <source>Manage existing branches:</source>
-        <target>기존 브랜치 관리:</target>
-        
-      </trans-unit>
-      <trans-unit id="gbStart.Text">
-        <source>Start branch:</source>
-        <target>브랜치 시작:</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>branch:</source>
-        <target>브랜치:</target>
-        
-      </trans-unit>
-      <trans-unit id="label10.Text">
-        <source>Expected name:</source>
-        <target>예상 이름:</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>command:</source>
-        <target>명령:</target>
-        
-      </trans-unit>
-      <trans-unit id="label9.Text">
-        <source>Remote to pull from :</source>
-        <target>pull을 할 원격 :</target>
-        
-      </trans-unit>
-      <trans-unit id="lblCaptionHead.Text">
-        <source>HEAD:</source>
-        <target>HEAD:</target>
-        
-      </trans-unit>
-      <trans-unit id="lblHead.Text">
-        <source>ref/...</source>
-        <target>참조/...</target>
-        
-      </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
-        <source>[prefix]/</source>
-        <target>[접두사]/</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitFlow.Text">
-        <source>About GitFlow</source>
-        <target>GitFlow 정보</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitFlow.ttGitFlow">
-        <source>A good branch model for your project with Git...</source>
-        <target>Git 프로젝트를 위한 좋은 브랜치 모델...</target>
-        
-      </trans-unit>
-      <trans-unit id="panel3.Text">
-        <source>Result of git flow command run</source>
-        <target>git flow 명령 실행 결과</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="ko">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>GitFlow</source>
-        <target>GitFlow</target>
         
       </trans-unit>
     </body>
@@ -913,7 +575,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
-        <target>Github 개인 액세스 토큰 만들기</target>
+        <target>GitHub 개인 액세스 토큰 만들기</target>
         
       </trans-unit>
       <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
@@ -928,22 +590,22 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
-        <target>Github 개인 액세스 토큰 관리하기</target>
+        <target>GitHub 개인 액세스 토큰 관리하기</target>
         
       </trans-unit>
       <trans-unit id="_noAssignedIssues.Text">
         <source>No assigned GitHub issues found</source>
-        <target>나에게 할당된 Github 이슈를 찾을 수 없음</target>
+        <target>나에게 할당된 GitHub 이슈를 찾을 수 없음</target>
         
       </trans-unit>
       <trans-unit id="_noTokenError.Text">
         <source>No GitHub personal access token (PAT) defined</source>
-        <target>Github 개인 억세스 토큰 (PAT)가 정의되지 않음</target>
+        <target>GitHub 개인 액세스 토큰 (PAT)가 정의되지 않음</target>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
-        <target>주의: Git Extensions을 다시 시작해야만 해당 토큰이 계정에 적용됩니다.</target>
+        <target>주의: Git Extensions을 다시 시작해야만 해당 토큰이 적용됩니다.</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
@@ -959,6 +621,35 @@ Are you sure you want to continue?</source>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
         <target>{0}에서 보기</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="lblApiToken.Text">
+        <source>API &amp;Token</source>
+        <target>API 토큰 (&amp;T)</target>
+        
+      </trans-unit>
+      <trans-unit id="lblApiUrl.Text">
+        <source>&amp;API URL</source>
+        <target>API URL (&amp;A)</target>
+        
+      </trans-unit>
+      <trans-unit id="lblOwner.Text">
+        <source>&amp;Owner</source>
+        <target>소유자 (&amp;O)</target>
+        
+      </trans-unit>
+      <trans-unit id="lblRepository.Text">
+        <source>&amp;Repository</source>
+        <target>리포지토리 (&amp;R)</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkTokenManagement.Text">
+        <source>Create a GitHub personal access token</source>
+        <target>GitHub 개인 액세스 토큰 만들기</target>
         
       </trans-unit>
     </body>
@@ -1178,90 +869,6 @@ Do you want to reset the configured path?</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="ko">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Jira Commit Hint</source>
-        <target>Jira 커밋 힌트</target>
-        
-      </trans-unit>
-      <trans-unit id="EmptyQueryResultCaption.Text">
-        <source>First Task Preview</source>
-        <target>첫 번째 작업 미리보기</target>
-        
-      </trans-unit>
-      <trans-unit id="EmptyQueryResultMessage.Text">
-        <source>[Empty Jira Query Result]</source>
-        <target>[빈 Jira 쿼리 결과]</target>
-        
-      </trans-unit>
-      <trans-unit id="InvalidUrlCaption.Text">
-        <source>Invalid Jira url</source>
-        <target>잘못된 Jira URL</target>
-        
-      </trans-unit>
-      <trans-unit id="InvalidUrlMessage.Text">
-        <source>A valid url is required to launch the Jira query helper</source>
-        <target>Jira 쿼리 도우미를 시작하려면 올바른 URL이 필요합니다</target>
-        
-      </trans-unit>
-      <trans-unit id="JiraFieldsLabel.Text">
-        <source>Jira fields</source>
-        <target>Jira 필드</target>
-        
-      </trans-unit>
-      <trans-unit id="JiraPluginConfigurationErrorText.Text">
-        <source>Jira plugin configuration incomplete!</source>
-        <target>Jira 플러그인 구성이 완료되지 않았습니다!</target>
-        
-      </trans-unit>
-      <trans-unit id="PreviewButtonText.Text">
-        <source>Preview</source>
-        <target>미리보기</target>
-        
-      </trans-unit>
-      <trans-unit id="QueryHelperLinkText.Text">
-        <source>Open the query helper inside Jira</source>
-        <target>Jira 내에서 쿼리 도우미 열기</target>
-        
-      </trans-unit>
-      <trans-unit id="QueryHelperOpenErrorText.Text">
-        <source>Unable to open Jira query helper</source>
-        <target>Jira 쿼리 도우미를 열 수 없습니다</target>
-        
-      </trans-unit>
-      <trans-unit id="_authTypeSettings.Caption">
-        <source>Auth type</source>
-        <target>인증 유형</target>
-        
-      </trans-unit>
-      <trans-unit id="_credentialsSettings.Caption">
-        <source>Jira credentials</source>
-        <target>Jira 자격 증명</target>
-        
-      </trans-unit>
-      <trans-unit id="_enabledSettings.Caption">
-        <source>Jira hint plugin enabled</source>
-        <target>Jira 힌트 플러그인 사용</target>
-        
-      </trans-unit>
-      <trans-unit id="_jqlQuerySettings.Caption">
-        <source>JQL Query</source>
-        <target>JQL 쿼리</target>
-        
-      </trans-unit>
-      <trans-unit id="_stringTemplateSetting.Caption">
-        <source>Message Template</source>
-        <target>메시지 템플릿</target>
-        
-      </trans-unit>
-      <trans-unit id="_urlSettings.Caption">
-        <source>Jira URL</source>
-        <target>Jira URL</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="ko">
     <body>
       <trans-unit id="$this.Text">
@@ -1348,18 +955,18 @@ Do you want to reset the configured path?</source>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
-        <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>'{0}'에서 '{1}' ({2})로 로그 커밋:</target>
+        <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
+        <target>&apos;{0}&apos;에서 &apos;{1}&apos;까지의 커밋 로그 ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
-        <source>'From' commit must be specified</source>
-        <target>'From' 커밋을 지정해야 합니다</target>
+        <source>&apos;From&apos; commit must be specified</source>
+        <target>&apos;From&apos; 커밋을 지정해야 합니다</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
-        <source>'To' commit must be specified</source>
-        <target>'To' 커밋을 지정해야 합니다</target>
+        <source>&apos;To&apos; commit must be specified</source>
+        <target>&apos;To&apos; 커밋을 지정해야 합니다</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1489,7 +1096,7 @@ branch names, tag names)</source>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
@@ -1526,16 +1133,16 @@ URL이 유효하고 API 토큰이 빌드 및 프로젝트 정보에 액세스할
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</source>
         <target>다음 범위를 사용하여 토큰을 생성해야 합니다.
-- '빌드(읽기)'
-- '프로젝트 및 팀(읽기)'</target>
+- &apos;빌드(읽기)&apos;
+- &apos;프로젝트 및 팀(읽기)&apos;</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>정규 표현식 'Build definition name'이 유효하지 않아 저장되지 않았습니다!</target>
+        <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
+        <target>정규 표현식 &apos;Build definition name&apos;이 유효하지 않아 저장되지 않습니다!</target>
         
       </trans-unit>
     </body>
@@ -1553,14 +1160,14 @@ URL이 유효하고 API 토큰이 빌드 및 프로젝트 정보에 액세스할
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
         <target>클립보드가 올바른 빌드 url을 갖고 있지 않습니다. 
 
 재시도하기 전에 빌드 url을 클립보드에 복사해주세요.
-(최소한 &quot;buildTypeId&quot; 파라미터를 포함하고 있어야 합니다)</target>
+(최소한 &quot;buildTypeId&quot; 매개변수를 포함하고 있어야 합니다)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
@@ -1575,7 +1182,7 @@ Please verify the server url.</source>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
         <target>&quot;Build Id Filter&quot; 정규 표현식이 유효하지 않아 저장되지 않습니다!</target>
         
       </trans-unit>

@@ -1,4 +1,6 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
@@ -12,7 +14,7 @@ internal abstract class ColumnProvider
     public int ColumnLeftMargin { get; } = DpiUtil.Scale(6);
 
     /// <summary>The DataGrid column object that models this column.</summary>
-    public DataGridViewColumn Column { get; init; }
+    public DataGridViewColumn Column { get; init; } = null!;
 
     /// <summary>The display friendly name of this column.</summary>
     public string Name { get; }
@@ -50,6 +52,19 @@ internal abstract class ColumnProvider
     /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
     public virtual bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
+        toolTip = null;
+        return false;
+    }
+
+    /// <summary>Attempts to get custom tool tip text for a highlight in a cell in this column.</summary>
+    /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
+    public virtual bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, IGitRef? highlightRef, [NotNullWhen(returnValue: true)] out string? toolTip)
+    {
+        if (AppSettings.ShowRevisionGridTooltips.Value)
+        {
+            return TryGetToolTip(e, revision, out toolTip);
+        }
+
         toolTip = null;
         return false;
     }

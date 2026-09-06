@@ -73,15 +73,15 @@ public partial class FormUpdates : GitExtensionsDialog
             Client github = new();
             Repository gitExtRepo = github.getRepository("gitextensions", "gitextensions");
 
-            GitHubReference configData = gitExtRepo?.GetRef("heads/configdata");
+            GitHubReference? configData = gitExtRepo?.GetRef("heads/configdata");
 
-            GitHubTree tree = configData?.GetTree();
+            GitHubTree? tree = configData?.GetTree();
             if (tree is null)
             {
                 return;
             }
 
-            GitHubTreeEntry releases = tree.Tree.FirstOrDefault(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase));
+            GitHubTreeEntry? releases = tree.Tree.FirstOrDefault(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase));
 
             if (releases?.Blob.Value is not null)
             {
@@ -119,7 +119,7 @@ public partial class FormUpdates : GitExtensionsDialog
         IEnumerable<ReleaseVersion> versions = ReleaseVersion.Parse(releases);
         IEnumerable<ReleaseVersion> updates = ReleaseVersion.GetNewerVersions(_currentVersion, AppSettings.CheckForReleaseCandidates, versions);
 
-        ReleaseVersion update = updates.OrderBy(version => version.ApplicationVersion).LastOrDefault();
+        ReleaseVersion? update = updates.OrderBy(version => version.ApplicationVersion).LastOrDefault();
         if (update is not null)
         {
             _updateFound = true;
@@ -159,7 +159,7 @@ public partial class FormUpdates : GitExtensionsDialog
 
                 if (UpdateRequired(_requiredNetRuntimeVersion, UserEnvironmentInformation.GetDotnetDesktopRuntimeVersions()))
                 {
-                    DisplayNetRuntimeLink(format: linkRequiredDotNetRuntime.Text, _requiredNetRuntimeVersion);
+                    DisplayNetRuntimeLink(format: linkRequiredDotNetRuntime.Text, _requiredNetRuntimeVersion!);
                 }
 
                 if (AppSettings.IsPortable())
@@ -174,7 +174,7 @@ public partial class FormUpdates : GitExtensionsDialog
 
                 if (!Visible)
                 {
-                    await ShowDialogAsync(_ownerWindow);
+                    await ShowDialogAsync(_ownerWindow!);
                 }
             }
             else
@@ -201,7 +201,9 @@ public partial class FormUpdates : GitExtensionsDialog
         int length = versionText2.Length;
         linkRequiredDotNetRuntime.LinkArea = new LinkArea(start, length);
 
-        _netRuntimeDownloadUrl = $@"https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch={RuntimeInformation.OSArchitecture}&rid=win-{RuntimeInformation.OSArchitecture}&apphost_version={requiredNetRuntimeVersion.ToString(fieldCount: 3)}&gui=true";
+        // The aka.ms/dotnet-core-applaunch URL expects the architecture and RID in lowercase (e.g. x64, arm64).
+        string arch = RuntimeInformation.OSArchitecture.ToString().ToLowerInvariant();
+        _netRuntimeDownloadUrl = $@"https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch={arch}&rid=win-{arch}&apphost_version={requiredNetRuntimeVersion.ToString(fieldCount: 3)}&gui=true";
 
         linkRequiredDotNetRuntime.Visible = true;
     }
@@ -268,7 +270,7 @@ public partial class FormUpdates : GitExtensionsDialog
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _errorMessage.Text + Environment.NewLine + ex.Message, _errorHeading.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBoxes.Show(this, _errorMessage.Text + Environment.NewLine + ex.Message, _errorHeading.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

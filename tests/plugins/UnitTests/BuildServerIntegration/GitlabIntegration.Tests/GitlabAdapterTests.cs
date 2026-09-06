@@ -1,6 +1,5 @@
 ﻿using System.Reactive.Concurrency;
 using CommonTestUtils;
-using FluentAssertions;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Plugins.GitlabIntegration;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient;
@@ -10,14 +9,12 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 
 namespace GitlabIntegrationTests;
-
-[TestFixture]
 internal class GitlabAdapterTests
 {
-    private GitlabAdapter _target;
+    private GitlabAdapter _target = null!;
 
-    private IScheduler _scheduler;
-    private IGitlabApiClient _apiClient;
+    private IScheduler _scheduler = null!;
+    private IGitlabApiClient _apiClient = null!;
 
     [SetUp]
     public void SetUp()
@@ -31,6 +28,13 @@ internal class GitlabAdapterTests
 
         _target = new GitlabAdapter(apiClientFactory);
         _target.Initialize(Substitute.For<IBuildServerWatcher>(), new MemorySettings(), () => { });
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _target.Dispose();
+        _apiClient.Dispose();
     }
 
     [Test]

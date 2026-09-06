@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
 using GitUI.Hotkey;
@@ -19,7 +19,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
 
               Focus the output history and (when displayed as panel) toggle its visibility using the hotkey {0}.
               """);
-    private readonly ShellProvider _shellProvider = new();
+    private readonly IShellProvider _shellProvider;
     private int _cboTerminalPreviousIndex = -1;
 
     public FormBrowseRepoSettingsPage(IServiceProvider serviceProvider)
@@ -28,6 +28,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
         InitializeComponent();
         cboTerminal.DisplayMember = "Name";
         InitializeComplete();
+        _shellProvider = serviceProvider.GetRequiredService<IShellProvider>();
         string hotkey = serviceProvider.GetRequiredService<IHotkeySettingsManager>()
             .LoadHotkeys(FormBrowse.HotkeySettingsName)
             .GetShortcutDisplay(FormBrowse.Command.FocusOutputHistoryAndToggleIfPanel);
@@ -66,7 +67,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
             AppSettings.OutputHistoryPanelVisible.Value = !chkShowOutputHistoryAsTab.Checked && outputHistoryDepth > 0;
         }
 
-        AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem).Name.ToLowerInvariant();
+        AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem!).Name.ToLowerInvariant();
 
         base.PageToSettings();
     }

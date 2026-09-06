@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.BrowseDialog;
+using System.Runtime.InteropServices;
+
+namespace GitUI.CommandsDialogs.BrowseDialog;
 
 /// <summary>
 /// Represents a menu command with Text, ShortcutKey or ShortcutDisplayString, Action,
@@ -9,7 +11,7 @@
 ///
 /// Purpose: have methods from specific context menus also available in main menu.
 /// </summary>
-internal class MenuCommand
+internal sealed class MenuCommand
 {
     public static MenuCommand CreateSeparator()
     {
@@ -64,7 +66,7 @@ internal class MenuCommand
             }
             else
             {
-                MessageBox.Show("No ExecuteAction assigned to this MenuCommand. Please submit a bug report.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show("No ExecuteAction assigned to this MenuCommand. Please submit a bug report.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         };
 
@@ -147,7 +149,7 @@ internal class MenuCommand
         {
             bool isChecked = IsCheckedFunc();
 
-            foreach (ToolStripMenuItem item in _registeredMenuItems)
+            foreach (ToolStripMenuItem item in CollectionsMarshal.AsSpan(_registeredMenuItems))
             {
                 item.Checked = isChecked;
             }
@@ -157,7 +159,7 @@ internal class MenuCommand
         {
             bool isEnabled = IsEnabledFunc();
 
-            foreach (ToolStripMenuItem item in _registeredMenuItems)
+            foreach (ToolStripMenuItem item in CollectionsMarshal.AsSpan(_registeredMenuItems))
             {
                 item.Enabled = isEnabled;
             }
@@ -166,7 +168,7 @@ internal class MenuCommand
 
     public void UpdateMenuItemsShortcutKeyDisplayString()
     {
-        foreach (ToolStripMenuItem item in _registeredMenuItems)
+        foreach (ToolStripMenuItem item in CollectionsMarshal.AsSpan(_registeredMenuItems))
         {
             item.ShortcutKeyDisplayString = ShortcutKeyDisplayString;
         }

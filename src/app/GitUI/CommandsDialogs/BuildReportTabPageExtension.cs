@@ -5,7 +5,6 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs;
@@ -82,7 +81,7 @@ public class BuildReportTabPageExtension
                 if (_buildReportTabPage is not null && _buildReportWebBrowser is not null && _tabControl.Controls.Contains(_buildReportTabPage))
                 {
                     _buildReportWebBrowser.Stop();
-                    _buildReportWebBrowser.Document.Write(string.Empty);
+                    _buildReportWebBrowser.Document!.Write(string.Empty);
                     _tabControl.Controls.Remove(_buildReportTabPage);
                 }
             }
@@ -101,7 +100,7 @@ public class BuildReportTabPageExtension
         {
             if (revision.BuildStatus?.ShowInBuildReportTab == true)
             {
-                _buildReportWebBrowser.Navigate(revision.BuildStatus.Url);
+                _buildReportWebBrowser.Navigate(revision.BuildStatus.Url!);
             }
 
             if (isFavIconMissing)
@@ -143,7 +142,7 @@ public class BuildReportTabPageExtension
         _selectedGitRevision?.PropertyChanged += RevisionPropertyChanged;
     }
 
-    private void RevisionPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void RevisionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(GitRevision.BuildStatus))
         {
@@ -168,28 +167,27 @@ public class BuildReportTabPageExtension
         };
     }
 
-    private void BuildReportWebBrowserOnNavigated(object sender,
-                                                  WebBrowserNavigatedEventArgs webBrowserNavigatedEventArgs)
+    private void BuildReportWebBrowserOnNavigated(object? sender, WebBrowserNavigatedEventArgs webBrowserNavigatedEventArgs)
     {
         Validates.NotNull(_buildReportWebBrowser);
         Validates.NotNull(_buildReportTabPage);
 
         _buildReportWebBrowser.Navigated -= BuildReportWebBrowserOnNavigated;
 
-        string favIconUrl = DetermineFavIconUrl(_buildReportWebBrowser.Document);
+        string? favIconUrl = DetermineFavIconUrl(_buildReportWebBrowser.Document!);
 
         if (favIconUrl is not null)
         {
             ThreadHelper.FileAndForget(async () =>
                 {
-                    using Stream imageStream = await DownloadRemoteImageFileAsync(favIconUrl);
+                    using Stream? imageStream = await DownloadRemoteImageFileAsync(favIconUrl);
                     if (imageStream is not null)
                     {
                         await _tabControl.SwitchToMainThreadAsync();
 
                         Image favIconImage = Image.FromStream(imageStream)
                                                 .GetThumbnailImage(16, 16, null, IntPtr.Zero);
-                        ImageList.ImageCollection imageCollection = _tabControl.ImageList.Images;
+                        ImageList.ImageCollection imageCollection = _tabControl.ImageList!.Images;
                         int imageIndex = _buildReportTabPage.ImageIndex;
 
                         if (imageIndex < 0)
@@ -210,8 +208,7 @@ public class BuildReportTabPageExtension
 
     private bool IsBuildResultPageEnabled()
     {
-        IBuildServerSettings buildServerSettings = GetModule().GetEffectiveSettings().GetBuildServerSettings();
-        return buildServerSettings.ShowBuildResultPageOrDefault;
+        return BuildServerSettings.ShowBuildResultPage.ValueOrDefault(GetModule().GetEffectiveSettings());
     }
 
     private IGitModule GetModule()
@@ -221,7 +218,7 @@ public class BuildReportTabPageExtension
     {
         HtmlElementCollection links = htmlDocument.GetElementsByTagName("link");
 #pragma warning disable CA1862 // Use the 'StringComparison' method overloads to perform case-insensitive string comparisons
-        HtmlElement favIconLink =
+        HtmlElement? favIconLink =
             links.Cast<HtmlElement>()
                  .SingleOrDefault(x => x.GetAttribute("rel").ToLowerInvariant() == "shortcut icon");
 #pragma warning restore CA1862 // Use the 'StringComparison' method overloads to perform case-insensitive string comparisons

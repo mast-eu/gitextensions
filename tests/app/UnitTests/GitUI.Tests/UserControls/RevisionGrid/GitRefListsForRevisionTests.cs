@@ -1,18 +1,15 @@
-﻿using FluentAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid;
-
-[TestFixture]
 public class GitRefListsForRevisionTests
 {
-    private GitRevision _revision;
-    private IGitModule _module;
-    private IGitRef[] _refs;
+    private GitRevision _revision = null!;
+    private IGitModule _module = null!;
+    private IGitRef[] _refs = null!;
 
     [SetUp]
     public void Setup()
@@ -34,13 +31,13 @@ public class GitRefListsForRevisionTests
     [Test]
     public void ctor_must_throw_if_revision_null()
     {
-        ((Action)(() => new GitRefListsForRevision(null))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => new GitRefListsForRevision(null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
     public void ctor_must_throw_if_revision_ref_null()
     {
-        ((Action)(() => new GitRefListsForRevision(new GitRevision(ObjectId.Random()) { Refs = null }))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => new GitRefListsForRevision(new GitRevision(ObjectId.Random()) { Refs = null! }))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]

@@ -17,15 +17,16 @@ public static partial class Commands
         return new GitCommand(accessesRemote: false, changesRepoState: true,
             new GitArgumentBuilder("checkout")
             {
-                { localChanges == LocalChangesAction.Merge, "--merge" },
-                { localChanges == LocalChangesAction.Reset, "--force" },
-                { remote && newBranchMode == CheckoutNewBranchMode.Create, $"-b {newBranchName.Quote()}" },
-                { remote && newBranchMode == CheckoutNewBranchMode.Reset, $"-B {newBranchName.Quote()}" },
+                { localChanges is LocalChangesAction.Merge, "--merge" },
+                { localChanges is LocalChangesAction.Reset, "--force" },
+                { remote && newBranchMode is CheckoutNewBranchMode.Create, $"-b {newBranchName.Quote()}" },
+                { remote && newBranchMode is CheckoutNewBranchMode.Reset, $"-B {newBranchName.Quote()}" },
+                { remote && newBranchMode is CheckoutNewBranchMode.Create, "--track" },
                 branchName.QuoteNE()
             });
     }
 
-    public static IGitCommand CreateTag(GitCreateTagArgs gitCreateTagArgs, string? tagMessageFileName, Func<string, string?> getPathForGitExecution)
+    public static IGitCommand CreateTag(GitCreateTagArgs gitCreateTagArgs, string? tagMessageFileName, Func<string?, string?> getPathForGitExecution)
     {
         Validate(gitCreateTagArgs, tagMessageFileName);
 
@@ -56,11 +57,11 @@ public static partial class Commands
             };
         }
 
-        static void Validate(GitCreateTagArgs gitCreateTagArgs, string tagMessageFileName)
+        static void Validate(GitCreateTagArgs gitCreateTagArgs, string? tagMessageFileName)
         {
-            if (gitCreateTagArgs.ObjectId is null)
+            if (gitCreateTagArgs.ObjectId.IsArtificial)
             {
-                throw new ArgumentException("Revision is required.");
+                throw new ArgumentException("A valid, non-artificial revision is required for tagging.", nameof(gitCreateTagArgs.ObjectId));
             }
 
             if (string.IsNullOrWhiteSpace(gitCreateTagArgs.TagName))

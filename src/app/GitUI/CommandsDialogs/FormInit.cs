@@ -22,8 +22,14 @@ public partial class FormInit : GitExtensionsDialog
 
     private readonly EventHandler<GitModuleEventArgs>? _gitModuleChanged;
 
-    public FormInit(string dir, EventHandler<GitModuleEventArgs>? gitModuleChanged)
-        : base(commands: null, enablePositionRestore: true)
+    /// <summary>
+    ///  Initializes a new instance of the <see cref="FormInit"/> class.
+    /// </summary>
+    /// <param name="commands">The <see cref="IGitUICommands"/> instance, mainly in its role as <see cref="IServiceProvider"/>.</param>
+    /// <param name="dir">The initial directory path.</param>
+    /// <param name="gitModuleChanged">The event handler for Git module changes.</param>
+    public FormInit(IGitUICommands commands, string dir, EventHandler<GitModuleEventArgs>? gitModuleChanged)
+        : base(commands, enablePositionRestore: true)
     {
         ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -46,13 +52,13 @@ public partial class FormInit : GitExtensionsDialog
 
         if (!IsRootedDirectoryPath(directoryPath))
         {
-            MessageBox.Show(this, _chooseDirectory.Text, _chooseDirectoryCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _chooseDirectory.Text, _chooseDirectoryCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
         if (File.Exists(directoryPath))
         {
-            MessageBox.Show(this, _chooseDirectoryNotFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _chooseDirectoryNotFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -63,7 +69,7 @@ public partial class FormInit : GitExtensionsDialog
             System.IO.Directory.CreateDirectory(module.WorkingDir);
         }
 
-        MessageBox.Show(this, module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        MessageBoxes.Show(this, module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
@@ -97,7 +103,7 @@ public partial class FormInit : GitExtensionsDialog
 
     private void BrowseClick(object sender, EventArgs e)
     {
-        string userSelectedPath = OsShellUtil.PickFolder(this);
+        string? userSelectedPath = OsShellUtil.PickFolder(this);
 
         if (userSelectedPath is not null)
         {

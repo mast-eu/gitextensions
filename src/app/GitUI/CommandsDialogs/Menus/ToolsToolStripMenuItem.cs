@@ -1,5 +1,5 @@
 ﻿using GitCommands;
-using GitCommands.Utils;
+using GitExtUtils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Infrastructure;
 using GitUI.Shells;
@@ -11,19 +11,24 @@ namespace GitUI.CommandsDialogs.Menus;
 
 internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
 {
-    public event EventHandler<SettingsChangedEventArgs> SettingsChanged;
+    public event EventHandler<SettingsChangedEventArgs>? SettingsChanged;
 
     public ToolsToolStripMenuItem()
     {
         InitializeComponent();
 
-        gitBashToolStripMenuItem.Tag = new ShellProvider().GetShell(BashShell.ShellName);
-
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             toolStripSeparator6.Visible = false;
             PuTTYToolStripMenuItem.Visible = false;
         }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        gitBashToolStripMenuItem.Tag = UICommands.GetRequiredService<IShellProvider>().GetShell(BashShell.ShellName);
     }
 
     public override void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
@@ -45,7 +50,7 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
 
     private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
     {
-        FormGitCommandLog.ShowOrActivate(OwnerForm);
+        FormGitCommandLog.ShowOrActivate(OwnerForm!);
     }
 
     private void GitGuiToolStripMenuItemClick(object sender, EventArgs e)

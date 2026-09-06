@@ -1,6 +1,6 @@
-namespace GitCommands.DiffMergeTools;
+﻿namespace GitCommands.DiffMergeTools;
 
-internal class VsCode : DiffMergeTool
+internal sealed class VsCode : DiffMergeTool
 {
     private static readonly string[] Folders = GetFolders();
 
@@ -8,7 +8,7 @@ internal class VsCode : DiffMergeTool
     public override string DiffCommand => "--new-window --wait --diff \"$LOCAL\" \"$REMOTE\"";
 
     /// <inheritdoc />
-    public override string ExeFileName => "Code.exe";
+    public override string ExeFileName => OperatingSystem.IsWindows() ? "Code.exe" : "code";
 
     /// <inheritdoc />
     public override string MergeCommand => "--new-window --wait --merge \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\"";
@@ -24,7 +24,7 @@ internal class VsCode : DiffMergeTool
         string folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         return
         [
-            Path.Combine(folder, @"Programs\Microsoft VS Code"),
+            Path.Join(folder, @"Programs\Microsoft VS Code"),
             @"Microsoft VS Code\",
         ];
     }

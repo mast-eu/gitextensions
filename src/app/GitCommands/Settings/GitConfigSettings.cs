@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.Diagnostics;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -73,7 +71,15 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
         }
 
         Update();
-        return UniqueValueSettings.TryGetValue(name, out value) ? value : null;
+        if (UniqueValueSettings.TryGetValue(name, out value))
+        {
+            return value;
+        }
+
+        // A setting may occur more than once in a single scope, either because it is a genuine multi-value setting
+        // or because a conditional include ("includeIf") overrides the value of the including config file.
+        // "git config get" yields the last value in both cases, so do the same here.
+        return _multiValueSettings.TryGetValue(name, out List<string>? values) ? values[^1] : null;
     }
 
     public IReadOnlyList<string> GetValues(string name)
@@ -108,15 +114,6 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
 
     public void SetValue(string name, string? value)
     {
-        if (_multiValueSettings.ContainsKey(name))
-        {
-            throw new UserExternalOperationException(new InvalidOperationException($"""
-                Changing multi-value git settings is not supported. Tried to set "{name}" = "{value}".
-                But you have set multiple values for "{name}" in the {GitSettingLevel.ToString().ToLower()} git config file. This is unusual for this configuration entry.
-                Please make the entry unique manually.
-                """));
-        }
-
         name = NormalizeSettingName(name);
 
         if (value?.Length is 0)
@@ -127,6 +124,16 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
         if (value == GetValue(name))
         {
             return;
+        }
+
+        if (_multiValueSettings.ContainsKey(name))
+        {
+            throw new UserExternalOperationException(new InvalidOperationException($"""
+                Changing multi-value git settings is not supported. Tried to set "{name}" = "{value}".
+                But "{name}" has multiple values in the {GitSettingLevel.ToString().ToLowerInvariant()} git config. This is unusual for this configuration entry.
+                Either it is set several times, or a conditional include ("includeIf") overrides the value of the including config file.
+                Please edit the config file(s) manually.
+                """));
         }
 
         if (UniqueValueSettings.TryGetValue(name, out string? storedValue) && value == storedValue)

@@ -2,10 +2,8 @@
 
 # Git Extensions
 
-Git Extensions is a standalone UI tool for managing git repositories.
-It also integrates with Windows Explorer and Microsoft Visual Studio (2015/2017/2019).
-
-Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) or send us a tweet [![@git_extensions](https://img.shields.io/badge/twitter-%40git__extensions-blue)](https://twitter.com/git_extensions)
+Git Extensions is a standalone Windows UI tool for managing git repositories.
+It also integrates with Windows Explorer and Microsoft Visual Studio.
 
 ## Online manual
 
@@ -27,7 +25,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Runtime environment
     </td>
     <td>
-      MS Windows 7SP1+ // <a href="https://dotnet.microsoft.com/download/dotnet/9.0" target=_blank>.NET Desktop 10.0 SDK</a>
+      MS Windows 10+ // <a href="https://dotnet.microsoft.com/download/dotnet/10.0" target=_blank>.NET Desktop 10.0 SDK</a>
     </td>
   </tr>
   <tr>
@@ -43,7 +41,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Current dev status
     </td>
     <td>
-      <a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a>
+      <a href="https://github.com/gitextensions/gitextensions/actions/workflows/pr-build.yml?query=branch%3Amaster"><img alt="Build status" src="https://github.com/gitextensions/gitextensions/actions/workflows/pr-build.yml/badge.svg?branch=master" style="max-width:100%;"></a>
     </td>
   </tr>
   <tr>
@@ -55,10 +53,6 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
     </td>
   </tr>
 </table>
-
-### Older versions
-
-See [build instructions](https://github.com/gitextensions/gitextensions/wiki/Build-instructions)
 
 ## Downloads
 
@@ -75,7 +69,7 @@ If you want to **update a portable version**, you should delete all the files an
 <table>
   <tr>
     <td>
-      <strong>Latest Release: v6.0.5</strong>
+      <strong>Latest official release: v7.2.1</strong>
     </td>
     <td>
       <a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a><br />
@@ -88,8 +82,8 @@ If you want to **update a portable version**, you should delete all the files an
       NB: expect :unicorn: :unicorn: and :dragon: :dragon:
     </td>
     <td>
-      <a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master/artifacts">[ Download ]</a><br />
-      <a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a>
+      <a href="https://github.com/gitextensions/gitextensions/actions/workflows/pr-build.yml?query=branch%3Amaster">[ Download ]</a><br />
+      <a href="https://github.com/gitextensions/gitextensions/actions/workflows/pr-build.yml?query=branch%3Amaster"><img alt="Build status" src="https://github.com/gitextensions/gitextensions/actions/workflows/pr-build.yml/badge.svg?branch=master" style="max-width:100%;"></a>
     </td>
   </tr>
   <tr>
@@ -102,41 +96,12 @@ If you want to **update a portable version**, you should delete all the files an
   </tr>
   <tr>
     <td>
-      <strong>Visual Studio VSIX (2015/2017/2019)</strong>
-    </td>
-    <td>
-      <a href="https://marketplace.visualstudio.com/items?itemName=GitExtensionsApp.v341">[ Download ]</a> or install from Visual Studio via Extensions
-    </td>
-  </tr>
-  <tr>
-    <td>
       <strong>Visual Studio Code VSIX</strong><br />
       Kudos to <a href="https://github.com/pmiossec" class="author text-inherit">@pmiossec</a>
     </td>
     <td>
       <a href="https://marketplace.visualstudio.com/items?itemName=pmiossec.vscode-gitextensions">[ Download ]</a> or install via VSCode<br />
       NB: Please direct all discussions about the VSIX to <a href="https://github.com/pmiossec/vscode-gitextensions">its own repo</a>.
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <strong>IntelliJ platform IDEs</strong><br />
-      Kudos to <a href="https://github.com/DmitryZhelnin" class="author text-inherit">@DmitryZhelnin</a>
-    </td>
-    <td>
-      <a href="https://plugins.jetbrains.com/plugin/11511-gitextensions">[ Download ]</a> or install via IDE Plugins settings<br />
-      NB: Please direct all discussions about this plugin to <a href="https://github.com/DmitryZhelnin/git-extensions-intellij">its own repo</a>.
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <strong>Git Extensions for VS Code</strong><br />
-      Kudos to <a href="https://github.com/Carl-Hugo" class="author text-inherit">@Carl-Hugo</a>
-    </td>
-    <td>
-        <p>This extension allows users to <strong>Browse with Git Extensions</strong> from the <em>Explorer</em> and the <em>Editor</em>. It supports a single folder and workspaces. Nothing fancier.</p>
-        <p><a href="https://marketplace.visualstudio.com/items?itemName=forevolve.git-extensions-for-vs-code">[ Download ]</a> from the Marketplace or install via VS Code<br />
-        NB: Please direct all discussions about this extension to <a href="https://github.com/ForEvolve/git-extensions-for-vs-code">its own repo</a>.</p>
     </td>
   </tr>
 </table>

@@ -228,7 +228,7 @@ public sealed partial class FormPull : GitExtensionsDialog
             selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _branch));
         }
 
-        ConfigFileRemote currentBranchRemote = remotes.FirstOrDefault(x => StringComparer.OrdinalIgnoreCase.Equals(x.Name, selectedRemoteName));
+        ConfigFileRemote? currentBranchRemote = remotes.FirstOrDefault(x => StringComparer.OrdinalIgnoreCase.Equals(x.Name, selectedRemoteName));
         if (currentBranchRemote is not null)
         {
             _NO_TRANSLATE_Remotes.SelectedItem = currentBranchRemote;
@@ -261,12 +261,7 @@ public sealed partial class FormPull : GitExtensionsDialog
                 messageBoxTitle = string.Format(_pruneFromCaption.Text, remote);
             }
 
-            bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
-                                     || MessageBox.Show(
-                                         owner,
-                                         _pullFetchPruneAllConfirmation.Text,
-                                         messageBoxTitle,
-                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
+            bool isActionConfirmed = MessageBoxes.ConfirmSuppressible(owner ?? this, _pullFetchPruneAllConfirmation.Text, messageBoxTitle, AppSettings.DontConfirmFetchAndPruneAll);
 
             if (!isActionConfirmed)
             {
@@ -290,15 +285,21 @@ public sealed partial class FormPull : GitExtensionsDialog
 
     private void MergetoolClick(object sender, EventArgs e)
     {
-        Module.RunMergeTool();
-
-        if (MessageBox.Show(this, _allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+        this.InvokeAndForget(async () =>
         {
-            return;
-        }
+            using (FormBusyScope.Enter(this))
+            {
+                await Task.Run(() => Module.RunMergeTool());
+            }
 
-        UICommands.StartCommitDialog(this);
+            if (MessageBoxes.Show(this, _allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            UICommands.StartCommitDialog(this);
+        });
     }
 
     private void BranchesDropDown(object sender, EventArgs e)
@@ -396,7 +397,7 @@ public sealed partial class FormPull : GitExtensionsDialog
             page.Buttons.Add(btnCheckout);
             page.Buttons.Add(btnContinue);
 
-            TaskDialogButton result = TaskDialog.ShowDialog(owner?.Handle ?? default, page);
+            TaskDialogButton result = TaskDialog.ShowDialog(owner?.Handle ?? Handle, page);
             if (result == TaskDialogButton.Cancel)
             {
                 return DialogResult.Cancel;
@@ -480,19 +481,19 @@ public sealed partial class FormPull : GitExtensionsDialog
         {
             if (PullFromUrl.Checked && string.IsNullOrEmpty(comboBoxPullSource.Text))
             {
-                MessageBox.Show(this, _selectSourceDirectory.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _selectSourceDirectory.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
             if (PullFromRemote.Checked && string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text) && !IsPullAll())
             {
-                MessageBox.Show(this, _selectRemoteRepository.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _selectRemoteRepository.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
             if (!Fetch.Checked && Branches.Text == "*")
             {
-                MessageBox.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -542,7 +543,7 @@ public sealed partial class FormPull : GitExtensionsDialog
 
             bool AskIfSubmodulesShouldBeInitialized()
             {
-                return MessageBox.Show(this, _questionInitSubmodules.Text, _questionInitSubmodulesCaption.Text,
+                return MessageBoxes.Show(this, _questionInitSubmodules.Text, _questionInitSubmodulesCaption.Text,
                            MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
             }
         }
@@ -585,7 +586,7 @@ public sealed partial class FormPull : GitExtensionsDialog
                     SizeToContent = true
                 };
 
-                messageBoxResult = TaskDialog.ShowDialog(owner?.Handle ?? IntPtr.Zero, page) == TaskDialogButton.Yes;
+                messageBoxResult = TaskDialog.ShowDialog(owner?.Handle ?? Handle, page) == TaskDialogButton.Yes;
 
                 if (page.Verification.Checked)
                 {
@@ -643,7 +644,7 @@ public sealed partial class FormPull : GitExtensionsDialog
         // ask only if exists commit not pushed to remote yet
         if (Rebase.Checked && PullFromRemote.Checked && MergeCommitExists())
         {
-            dialogResult = MessageBox.Show(this, _areYouSureYouWantToRebaseMerge.Text,
+            dialogResult = MessageBoxes.Show(this, _areYouSureYouWantToRebaseMerge.Text,
                                               _areYouSureYouWantToRebaseMergeCaption.Text,
                                               MessageBoxButtons.YesNoCancel,
                                               MessageBoxIcon.Warning,
@@ -911,7 +912,7 @@ public sealed partial class FormPull : GitExtensionsDialog
 
             if (IsPullAll())
             {
-                foreach (ConfigFileRemote remote in (IEnumerable<ConfigFileRemote>)_NO_TRANSLATE_Remotes.DataSource)
+                foreach (ConfigFileRemote remote in (IEnumerable<ConfigFileRemote>)_NO_TRANSLATE_Remotes.DataSource!)
                 {
                     if (!string.IsNullOrWhiteSpace(remote.Name) && remote.Name != AllRemotes)
                     {

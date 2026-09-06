@@ -1,5 +1,4 @@
 ﻿using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -14,8 +13,8 @@ public class FormOpenDirectoryTests
 {
     // Created once for the fixture
     private static readonly IGitExecutorProvider _executorProvider = new GitExecutorProvider(new GitDirectoryResolver());
-    private ReferenceRepository _referenceRepository;
-    private ILocalRepositoryManager _localRepositoryManager;
+    private ReferenceRepository _referenceRepository = null!;
+    private ILocalRepositoryManager _localRepositoryManager = null!;
 
     [SetUp]
     public void Setup()
@@ -59,7 +58,7 @@ public class FormOpenDirectoryTests
 
         // ensure absence of the trailing slash isn't a problem
         path = path[..^1];
-        ClassicAssert.DoesNotThrow(() => FormOpenDirectory.TestAccessor.OpenGitRepository(_executorProvider, path, _localRepositoryManager));
+        ((Action)(() => FormOpenDirectory.TestAccessor.OpenGitRepository(_executorProvider, path, _localRepositoryManager))).Should().NotThrow();
     }
 
     [Test]
@@ -69,7 +68,7 @@ public class FormOpenDirectoryTests
         string path = Path.GetTempPath();
         path[^1].Should().Be(Path.DirectorySeparatorChar);
 
-        IGitModule module = FormOpenDirectory.TestAccessor.OpenGitRepository(_executorProvider, _referenceRepository.Module.WorkingDir, _localRepositoryManager);
+        IGitModule? module = FormOpenDirectory.TestAccessor.OpenGitRepository(_executorProvider, _referenceRepository.Module.WorkingDir, _localRepositoryManager);
 
         module.Should().NotBeNull();
         module.WorkingDir.Should().Be(_referenceRepository.Module.WorkingDir);

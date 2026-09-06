@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitCommands.UserRepositoryHistory.Legacy;
 using NSubstitute;
@@ -7,15 +6,13 @@ using IRepositoryStorage = GitCommands.UserRepositoryHistory.IRepositoryStorage;
 using Repository = GitCommands.UserRepositoryHistory.Repository;
 
 namespace GitCommandsTests.UserRepositoryHistory;
-
-[TestFixture]
 public class LocalRepositoryManagerTests
 {
     private const string KeyRecentHistory = "history";
     private const string KeyFavouriteHistory = "history-favourite";
-    private IRepositoryStorage _repositoryStorage;
-    private IRepositoryHistoryMigrator _repositoryHistoryMigrator;
-    private LocalRepositoryManager _manager;
+    private IRepositoryStorage _repositoryStorage = null!;
+    private IRepositoryHistoryMigrator _repositoryHistoryMigrator = null!;
+    private LocalRepositoryManager _manager = null!;
     private int _userSetting;
 
     [SetUp]
@@ -121,14 +118,14 @@ public class LocalRepositoryManagerTests
     [Test]
     public void AssignCategoryAsync_should_throw_if_key_null()
     {
-        Func<Task> f = async () => { await _manager.AssignCategoryAsync(null, null); };
+        Func<Task> f = async () => { await _manager.AssignCategoryAsync(null!, null); };
         f.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Test]
     public async Task LoadFavouriteHistoryAsync_should_return_empty_list_if_nothing_loaded()
     {
-        _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => null);
+        _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => null!);
 
         IList<Repository> history = await _manager.LoadFavouriteHistoryAsync();
 
@@ -150,7 +147,7 @@ public class LocalRepositoryManagerTests
     [Test]
     public async Task LoadRecentHistoryAsync_should_return_empty_list_if_nothing_loaded()
     {
-        _repositoryStorage.Load(KeyRecentHistory).Returns(x => null);
+        _repositoryStorage.Load(KeyRecentHistory).Returns(x => null!);
 
         IList<Repository> history = await _manager.LoadRecentHistoryAsync();
 
@@ -178,6 +175,49 @@ public class LocalRepositoryManagerTests
 
         repositories.Should().HaveCount(size);
         repositories.Select(r => r.Path).Should().ContainInOrder("path1", "path2", "path3");
+    }
+
+    [Test]
+    public async Task LoadRecentHistoryAsync_should_keep_anchored_repositories_when_trimming()
+    {
+        const int size = 3;
+        AppSettings.RecentRepositoriesHistorySize = size;
+        List<Repository> history =
+        [
+            new Repository("path1"),
+            new Repository("path2"),
+            new Repository("path3"),
+            new Repository("path4"),
+            new Repository("path5") { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
+            new Repository("path6") { Anchor = Repository.RepositoryAnchor.AnchoredInRecent },
+        ];
+        _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
+
+        IList<Repository> repositories = await _manager.LoadRecentHistoryAsync();
+
+        repositories.Should().HaveCount(size);
+        repositories.Select(r => r.Path).Should().ContainInOrder("path1", "path5", "path6");
+        repositories.Select(r => r.Path).Should().NotContain(["path2", "path3", "path4"]);
+    }
+
+    [Test]
+    public async Task LoadRecentHistoryAsync_should_keep_all_anchored_repositories_when_they_exceed_size()
+    {
+        const int size = 2;
+        AppSettings.RecentRepositoriesHistorySize = size;
+        List<Repository> history =
+        [
+            new Repository("path1"),
+            new Repository("path2") { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
+            new Repository("path3") { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
+            new Repository("path4") { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
+        ];
+        _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
+
+        IList<Repository> repositories = await _manager.LoadRecentHistoryAsync();
+
+        repositories.Select(r => r.Path).Should().ContainInOrder("path2", "path3", "path4");
+        repositories.Select(r => r.Path).Should().NotContain("path1");
     }
 
     [Test]
@@ -283,7 +323,7 @@ public class LocalRepositoryManagerTests
     [Test]
     public void SaveFavouriteHistoryAsync_should_throw_if_repositories_null()
     {
-        Func<Task> action = async () => await _manager.SaveFavouriteHistoryAsync(null);
+        Func<Task> action = async () => await _manager.SaveFavouriteHistoryAsync(null!);
         action.Should().ThrowAsync<ArgumentNullException>();
     }
 
@@ -307,7 +347,7 @@ public class LocalRepositoryManagerTests
     [Test]
     public void SaveRecentHistoryAsync_should_throw_if_repositories_null()
     {
-        Func<Task> action = async () => await _manager.SaveRecentHistoryAsync(null);
+        Func<Task> action = async () => await _manager.SaveRecentHistoryAsync(null!);
         action.Should().ThrowAsync<ArgumentNullException>();
     }
 

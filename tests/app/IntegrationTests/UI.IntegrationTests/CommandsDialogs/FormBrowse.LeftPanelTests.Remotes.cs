@@ -1,5 +1,4 @@
 ﻿using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitCommands.Remotes;
 using GitUI;
@@ -12,15 +11,15 @@ namespace GitExtensions.UITests.CommandsDialogs;
 public class FormBrowse_LeftPanel_RemotesTests
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // Track the original setting value
     private bool _originalShowAuthorAvatarColumn;
     private bool _showAvailableDiffTools;
 
     // Created once for each test
-    private GitUICommands _commands;
-    private IConfigFileRemoteSettingsManager _remotesManager;
+    private GitUICommands _commands = null!;
+    private IConfigFileRemoteSettingsManager _remotesManager = null!;
     private static readonly string[] RemoteNames = ["remote1", "remote5", "remote3", "remote4", "remote2"];
 
     [OneTimeSetUp]
@@ -171,13 +170,13 @@ public class FormBrowse_LeftPanel_RemotesTests
 
     private static TreeNode GetRemoteNode(FormBrowse form)
     {
-        ClassicAssert.IsFalse(form.MainSplitContainer.Panel1Collapsed);
+        form.MainSplitContainer.Panel1Collapsed.Should().BeFalse();
 
         // Await all async operation such as load of branches and remotes in the left panel
         AsyncTestHelper.JoinPendingOperations();
 
         GitUI.UserControls.NativeTreeView treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
-        TreeNode remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
+        TreeNode? remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
         remotesNode.Should().NotBeNull();
 
         return remotesNode;

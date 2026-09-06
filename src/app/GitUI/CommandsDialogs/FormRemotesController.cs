@@ -2,7 +2,7 @@
 
 namespace GitUI.CommandsDialogs;
 
-internal class FormRemotesController
+internal sealed class FormRemotesController
 {
     public void RemoteDelete(IList<Repository> remotes, string? oldRemoteUrl)
     {
@@ -11,7 +11,7 @@ internal class FormRemotesController
             return;
         }
 
-        Repository oldRemote = remotes.FirstOrDefault(r => r.Path == oldRemoteUrl);
+        Repository? oldRemote = remotes.FirstOrDefault(r => r.Path == oldRemoteUrl);
         if (oldRemote is not null)
         {
             remotes.Remove(oldRemote);

@@ -7,14 +7,12 @@ using GitUI;
 using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid;
-
-[TestFixture]
 [Apartment(ApartmentState.STA)]
 public class RevisionFileNameTests
 {
-    private RevisionGridControl _revisionGridControl;
-    private MockExecutable _executable;
-    private IGitCommandRunner _commandRunner;
+    private RevisionGridControl _revisionGridControl = null!;
+    private MockExecutable _executable = null!;
+    private IGitCommandRunner _commandRunner = null!;
 
     [SetUp]
     public void SetUp()
@@ -40,6 +38,12 @@ public class RevisionFileNameTests
         _revisionGridControl.FilePathByObjectId = [];
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _revisionGridControl.Dispose();
+    }
+
     [TestCase("17b2a8777e43dff588284c9661206c97ccb6cf8e", "a.txt")]
     [TestCase("83ec7c0a516f00b67aa9915d8e673a26510c2eed", "b.txt")]
     public void GetRevisionFileName_should_query_git_and_return_file_name(string objectId, string expectedFileName)
@@ -55,7 +59,7 @@ public class RevisionFileNameTests
         {
             using (_executable.StageOutput(line, $"????{objectId}\n{expectedFileName}"))
             {
-                actualFileName = _revisionGridControl.GetRevisionFileName(path, ObjectId.Parse(objectId));
+                actualFileName = _revisionGridControl.GetRevisionFileName(path, ObjectId.Parse(objectId))!;
             }
         }
         finally
@@ -63,6 +67,6 @@ public class RevisionFileNameTests
             AppSettings.FollowRenamesInFileHistoryExactOnly = originalFollowRenamesInFileHistoryExactOnly;
         }
 
-        ClassicAssert.AreEqual(expectedFileName, actualFileName);
+        actualFileName.Should().Be(expectedFileName);
     }
 }

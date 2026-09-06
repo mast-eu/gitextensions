@@ -314,7 +314,7 @@ public partial class Spelling : Component
     /// </summary>
     private void BadChar(List<Word> tempSuggestion)
     {
-        char[] tryme = Dictionary.TryCharacters.ToCharArray();
+        string tryme = Dictionary.TryCharacters;
 
         for (int i = 0; i < CurrentWord.Length; i++)
         {
@@ -357,7 +357,7 @@ public partial class Spelling : Component
     /// </summary>
     private void ForgotChar(List<Word> tempSuggestion)
     {
-        char[] tryme = Dictionary.TryCharacters.ToCharArray();
+        string tryme = Dictionary.TryCharacters;
 
         for (int i = 0; i <= CurrentWord.Length; i++)
         {
@@ -528,7 +528,7 @@ public partial class Spelling : Component
             {
                 int diag = matrix[i - 1, j - 1];
 
-                if (source.Substring(i - 1, 1) != target.Substring(j - 1, 1))
+                if (!source.AsSpan(i - 1, 1).SequenceEqual(target.AsSpan(j - 1, 1)))
                 {
                     diag++;
                 }
@@ -695,9 +695,9 @@ public partial class Spelling : Component
         }
 
         // if not in list and replacement word has length
-        if (!ReplaceList.ContainsKey(CurrentWord) && _replacementWord.Length > 0)
+        if (_replacementWord.Length > 0)
         {
-            ReplaceList.Add(CurrentWord, _replacementWord);
+            ReplaceList.TryAdd(CurrentWord, _replacementWord);
         }
 
         ReplaceWord();
@@ -743,7 +743,7 @@ public partial class Spelling : Component
         _text.Remove(index, length);
 
         // if first letter upper case, match case for replacement word
-        if (char.IsUpper(_words[replacedIndex].ToString(), 0))
+        if (char.IsUpper(_words[replacedIndex].ValueSpan[0]))
         {
             _replacementWord = $"{char.ToUpper(_replacementWord[0], CultureInfo.CurrentUICulture)}{_replacementWord[1..]}";
         }
@@ -991,9 +991,9 @@ public partial class Spelling : Component
             foreach (string tempWord in _dictionary.PossibleBaseWords)
             {
                 string tempCode = _dictionary.PhoneticCode(tempWord);
-                if (tempCode.Length > 0 && !codes.ContainsKey(tempCode))
+                if (tempCode.Length > 0)
                 {
-                    codes.Add(tempCode, tempCode);
+                    codes.TryAdd(tempCode, tempCode);
                 }
             }
 

@@ -95,7 +95,7 @@ internal abstract class Tree : NodeBase, IDisposable
     // making sure to disable/enable the control.
     protected JoinableTask ReloadNodesDetached(Func<Func<RefsFilter, IReadOnlyList<IGitRef>>, CancellationToken, Task<Nodes>> loadNodesTask, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
-        TreeView treeView = TreeViewNode.TreeView;
+        TreeView? treeView = TreeViewNode.TreeView;
 
         return _reloadTaskRunner.RunDetached(async cancellationToken =>
         {
@@ -166,18 +166,14 @@ internal abstract class Tree : NodeBase, IDisposable
         HashSet<string> expandedNodesState = firstTime ? [] : TreeViewNode.GetExpandedNodesState();
         Nodes.FillTreeViewNode(TreeViewNode);
 
-        TreeNode selectedNode = TreeViewNode.TreeView.SelectedNode;
+        TreeNode? selectedNode = TreeViewNode.TreeView!.SelectedNode;
 
-        if (originalSelectedNodeFullNamePath != selectedNode?.GetFullNamePath())
+        if (originalSelectedNodeFullNamePath != selectedNode?.GetFullNamePath()
+            && TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath) is { } node)
         {
-            TreeNode node = TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath);
-
-            if (node is not null)
-            {
-                TreeViewNode.TreeView.SelectedNode = node.Tag is not BaseRevisionNode branchNode || branchNode.Visible
-                    ? node
-                    : null;
-            }
+            TreeViewNode.TreeView.SelectedNode = node.Tag is not BaseRevisionNode branchNode || branchNode.Visible
+                ? node
+                : null;
         }
 
         PostFillTreeViewNode(firstTime);
@@ -194,7 +190,7 @@ internal abstract class Tree : NodeBase, IDisposable
 
     private void ExpandPathToSelectedNode()
     {
-        if (TreeViewNode.TreeView.Nodes.Count == 0)
+        if (TreeViewNode.TreeView!.Nodes.Count == 0)
         {
             return;
         }

@@ -3,7 +3,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid;
 
-internal class GitRefListsForRevision
+internal sealed class GitRefListsForRevision
 {
     private readonly IGitRef[] _allBranches;
     private readonly IGitRef[] _localBranches;
@@ -20,9 +20,9 @@ internal class GitRefListsForRevision
         }
 
         _allBranches = [.. revision.Refs.Where(h => !h.IsTag && (h.IsHead || h.IsRemote))];
-        _localBranches = [.. _allBranches.Where(b => !b.IsRemote)];
+        _localBranches = Array.FindAll(_allBranches, b => !b.IsRemote);
         _branchesWithNoIdenticalRemotes = [.. _allBranches.Where(b => !b.IsRemote ||
-                                                                  !_localBranches.Any(lb => lb.TrackingRemote == b.Remote && lb.MergeWith == b.LocalName))];
+                                                                  !_localBranches.Any(lb => lb.IsTrackingRemote(b)))];
 
         _tags = [.. revision.Refs.Where(h => h.IsTag)];
     }
@@ -37,12 +37,12 @@ internal class GitRefListsForRevision
 
     public IReadOnlyList<string> GetAllBranchNames()
     {
-        return _allBranches.Select(b => b.Name).ToList();
+        return Array.ConvertAll(_allBranches, b => b.Name);
     }
 
     public IReadOnlyList<string> GetAllTagNames()
     {
-        return AllTags.Select(t => t.Name).ToList();
+        return AllTags.Select(t => t.Name).ToArray();
     }
 
     /// <summary>

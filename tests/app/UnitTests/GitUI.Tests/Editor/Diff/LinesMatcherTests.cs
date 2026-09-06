@@ -1,10 +1,7 @@
-﻿using FluentAssertions;
-using GitUI.Editor.Diff;
+﻿using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUITests.Editor.Diff;
-
-[TestFixture]
 public class LinesMatcherTests
 {
     [Test]

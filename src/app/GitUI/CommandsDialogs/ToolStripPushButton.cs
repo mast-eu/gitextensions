@@ -1,7 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitExtUtils;
-using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using ResourceManager;
 
@@ -17,14 +16,14 @@ public class ToolStripPushButton : ToolStripButton
     private readonly TranslationString _behindCommitsTointegrateOrForcePush =
         new("{0} commit(s) should be integrated (or will be lost if force pushed)");
 
-    public void DisplayAheadBehindInformation(IDictionary<string, AheadBehindData>? aheadBehindData, string branchName, string shortcut)
+    public void DisplayAheadBehindInformation(IReadOnlyDictionary<string, AheadBehindData>? aheadBehindData, string branchName, string shortcut)
     {
         if (string.IsNullOrWhiteSpace(branchName)
             || !AppSettings.ShowAheadBehindData
             || aheadBehindData?.TryGetValue(branchName, out AheadBehindData data) is not true)
         {
             ResetToDefaultState();
-            ToolTipText = ToolTipText.UpdateSuffix(shortcut);
+            ToolTipText = ToolTipText?.UpdateSuffix(shortcut);
             return;
         }
 
@@ -32,12 +31,9 @@ public class ToolStripPushButton : ToolStripButton
         AutoSize = true;
         Text = data.ToDisplay();
         DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-        ToolTipText = GetToolTipText(data).UpdateSuffix(shortcut);
+        ToolTipText = GetToolTipText(data)?.UpdateSuffix(shortcut);
 
-        if (!string.IsNullOrEmpty(data.BehindCount))
-        {
-            Image = Images.Unstage;
-        }
+        Image = string.IsNullOrEmpty(data.BehindCount) ? Images.Push : Images.Unstage;
     }
 
     /// <summary>
@@ -91,7 +87,7 @@ public class ToolStripPushButton : ToolStripButton
             _button = button;
         }
 
-        public string GetButtonText() => _button.Text;
+        public string? GetButtonText() => _button.Text;
         public int GetButtonWidth() => _button.Width;
     }
 }

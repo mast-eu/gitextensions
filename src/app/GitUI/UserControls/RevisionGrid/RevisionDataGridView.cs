@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System.Collections.Frozen;
+﻿using System.Collections.Frozen;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -19,6 +17,13 @@ namespace GitUI.UserControls.RevisionGrid;
 
 public sealed partial class RevisionDataGridView : DataGridView
 {
+    private enum RedrawMode
+    {
+        NoRedrawNeeded,
+        RedrawOnly,
+        RedrawWithClear,
+    }
+
     private const int BackgroundThreadUpdatePeriod = 25;
     private const int MouseWheelDeltaTimeout = 1500; // Mouse wheel idle time in milliseconds after which unconsumed wheel delta will be dropped.
     private const int RowCountUpdateCoolDown = 300;
@@ -66,7 +71,7 @@ public sealed partial class RevisionDataGridView : DataGridView
     /// <summary>
     /// Force refresh the gridview, set when revision graph is changed while loading revisions.
     /// </summary>
-    private bool _forceRefresh = false;
+    private RedrawMode _redrawMode;
 
     /// <summary>
     /// Indicates whether 'interesting' rows in the data grid is currently being loaded.
@@ -105,9 +110,34 @@ public sealed partial class RevisionDataGridView : DataGridView
         DoubleBuffered = true;
 
         _rowBackgroundBrush = new SolidBrush(AppColor.PanelBackground.GetThemeColor());
-        _alternatingRowBackgroundBrush = new SolidBrush(_rowBackgroundBrush.Color.MakeBackgroundDarkerBy(Application.IsDarkModeEnabled ? -0.018 : 0.025));
+        _alternatingRowBackgroundBrush = new SolidBrush(_rowBackgroundBrush.Color.MakeDarkerBy(Application.IsDarkModeEnabled ? -0.018 : 0.025));
         _authoredHighlightBrush = new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
         _inactiveSelectionHighlightBrush = new SolidBrush(AppColor.InactiveSelectionHighlight.GetThemeColor());
+
+        // subject/body colors are hardcoded to be correct relative each other,
+        // subject color should be emphasied compared to body, selected vs unselected etc.
+
+        // relativeNonSelectedSubject: SystemColors.ControlText
+        _relativeNonSelectedSubjectColor = Application.IsDarkModeEnabled
+            ? SystemColors.ControlText
+            : SystemColors.HighlightText;
+        _nonRelativeNonSelectedSubjectColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(192, 192, 192) // de-emphasised light grey on dark background
+            : SystemColors.GrayText;
+        _nonRelativeSelectedSubjectColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(235, 235, 215) // near-white with warm tint on blue selection
+            : Color.FromArgb(188, 188, 188);
+
+        // relativeNonSelectedBody: SystemColors.GrayText
+        _relativeSelectedBodyColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(170, 170, 150) // warm mid-grey on blue selection
+            : Color.FromArgb(188, 188, 188); // same as _nonRelativeSelectedSubjectColor
+        _nonRelativeNonSelectedBodyColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(130, 130, 130) // darker grey than subject, further de-emphasised
+            : Color.FromArgb(152, 152, 152);
+        _nonRelativeSelectedBodyColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(170, 170, 150) // same as relativeSelectedBody — consistent on selection
+            : Color.FromArgb(161, 161, 161);
 
         UpdateRowHeight();
 
@@ -357,7 +387,11 @@ public sealed partial class RevisionDataGridView : DataGridView
     {
         foreach (GitRevision revision in revisions)
         {
-            _forceRefresh |= _revisionGraph.Add(revision);
+            if (_revisionGraph.Add(revision))
+            {
+                _redrawMode = RedrawMode.RedrawWithClear;
+            }
+
             if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
             {
                 ++_loadedToBeSelectedRevisionsCount;
@@ -386,7 +420,10 @@ public sealed partial class RevisionDataGridView : DataGridView
         }
 
         // Insert at matching parent.
-        _forceRefresh |= _revisionGraph.Insert(workTreeRev, indexRev, parents);
+        if (_revisionGraph.Insert(workTreeRev, indexRev, parents))
+        {
+            _redrawMode = RedrawMode.RedrawWithClear;
+        }
 
         if (ToBeSelectedObjectIds.Contains(workTreeRev.ObjectId))
         {
@@ -407,7 +444,7 @@ public sealed partial class RevisionDataGridView : DataGridView
 
         _updateVisibleRowRangeSequence.CancelCurrent();
         _backgroundScrollTo = -1;
-        _forceRefresh = false;
+        _redrawMode = RedrawMode.NoRedrawNeeded;
         _visibleRowRange = new VisibleRowRange(fromIndex: 0, count: 0);
 
         // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about to delete the data
@@ -421,18 +458,9 @@ public sealed partial class RevisionDataGridView : DataGridView
             columnProvider.Clear();
         }
 
-        // Reload settings that will be used during drawing
+        // Reload settings that will be used during drawing.
+        // Theme related settings are only loaded at startup.
         _revisionGraphDrawNonRelativesTextGray = AppSettings.RevisionGraphDrawNonRelativesTextGray;
-
-        // relativeNonSelectedSubject: SystemColors.ControlText
-        _relativeNonSelectedSubjectColor = Application.IsDarkModeEnabled ? SystemColors.ControlText : SystemColors.HighlightText;
-        _nonRelativeNonSelectedSubjectColor = Application.IsDarkModeEnabled ? Color.FromArgb(192, 192, 192) : SystemColors.GrayText;
-        _nonRelativeSelectedSubjectColor = Application.IsDarkModeEnabled ? Color.FromArgb(235, 235, 215) : GetHighlightedGrayTextColor(degreeOfGrayness: 1f);
-
-        // relativeNonSelectedBody: SystemColors.GrayText
-        _relativeSelectedBodyColor = Application.IsDarkModeEnabled ? Color.FromArgb(170, 170, 150) : _nonRelativeSelectedSubjectColor;
-        _nonRelativeNonSelectedBodyColor = Application.IsDarkModeEnabled ? Color.FromArgb(130, 130, 130) : GetGrayControlTextColor(degreeOfGrayness: 1.4f);
-        _nonRelativeSelectedBodyColor = Application.IsDarkModeEnabled ? Color.FromArgb(170, 170, 150) : GetHighlightedGrayTextColor(degreeOfGrayness: 1.4f);
 
         _highlightAuthoredRevisions = AppSettings.HighlightAuthoredRevisions;
         _revisionGraphDrawAlternateBackColor = AppSettings.RevisionGraphDrawAlternateBackColor;
@@ -728,7 +756,7 @@ public sealed partial class RevisionDataGridView : DataGridView
             return;
         }
 
-        if (_forceRefresh)
+        if (_redrawMode == RedrawMode.RedrawWithClear)
         {
             // Always set _backgroundScrollTo in order to stop the background thread
             _backgroundScrollTo = -1;
@@ -758,12 +786,12 @@ public sealed partial class RevisionDataGridView : DataGridView
         int visibleRowCount = DisplayedRowCount(includePartialRow: true);
         visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
 
-        if (!_forceRefresh && _visibleRowRange.FromIndex == fromIndex && _visibleRowRange.Count == visibleRowCount)
+        if (_redrawMode == RedrawMode.NoRedrawNeeded && _visibleRowRange.FromIndex == fromIndex && _visibleRowRange.Count == visibleRowCount)
         {
             return;
         }
 
-        _forceRefresh = false;
+        _redrawMode = RedrawMode.NoRedrawNeeded;
         VisibleRowRange visibleRowRange = new(fromIndex, visibleRowCount);
         _visibleRowRange = visibleRowRange;
 
@@ -820,10 +848,25 @@ public sealed partial class RevisionDataGridView : DataGridView
 
     public override void Refresh()
     {
-        _forceRefresh = true;
+        _redrawMode = RedrawMode.RedrawWithClear;
         UpdateVisibleRowRange();
 
         base.Refresh();
+    }
+
+    /// <summary>
+    ///  Schedules a graph re-render without clearing the display cache, keeping the currently
+    ///  cached display visible during re-rendering. Use this for lightweight state changes such
+    ///  as hover highlighting, where the stale cache can be shown while the new render is computed.
+    /// </summary>
+    public void RequestRedrawWithoutClear()
+    {
+        if (_redrawMode < RedrawMode.RedrawOnly)
+        {
+            _redrawMode = RedrawMode.RedrawOnly;
+        }
+
+        _visibleRowRangeUpdater.ScheduleExecution();
     }
 
     private void UpdateRowHeight()
@@ -840,9 +883,9 @@ public sealed partial class RevisionDataGridView : DataGridView
         return _revisionGraph.TryGetNode(objectId, out RevisionGraphRevision? node) ? node.GitRevision : null;
     }
 
-    public int? TryGetRevisionIndex(ObjectId? objectId)
+    public int? TryGetRevisionIndex(ObjectId objectId)
     {
-        return objectId is not null && _revisionGraph.TryGetRowIndex(objectId, out int index) ? index : null;
+        return !objectId.IsZero && _revisionGraph.TryGetRowIndex(objectId, out int index) ? index : null;
     }
 
     public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)
@@ -883,10 +926,10 @@ public sealed partial class RevisionDataGridView : DataGridView
 
                 break;
             case Keys.Control | Keys.C:
-                IReadOnlyList<ObjectId>? selectedRevisions = SelectedObjectIds;
-                if (selectedRevisions?.Count is > 0)
+                IReadOnlyList<ObjectId>? selectedObjectIds = SelectedObjectIds;
+                if (selectedObjectIds?.Count is > 0)
                 {
-                    ClipboardUtil.TrySetText(string.Join(Environment.NewLine, selectedRevisions));
+                    ClipboardUtil.TrySetText(string.Join(Environment.NewLine, selectedObjectIds));
                 }
 
                 break;
@@ -1017,14 +1060,4 @@ public sealed partial class RevisionDataGridView : DataGridView
         _boldFont = new Font(_normalFont, FontStyle.Bold);
         _monospaceFont = AppSettings.MonospaceFont;
     }
-
-    private static Color GetHighlightedGrayTextColor(float degreeOfGrayness = 1f) =>
-        ColorHelper.GetHighlightGrayTextColor(
-            backgroundColorName: KnownColor.Control,
-            textColorName: KnownColor.ControlText,
-            highlightColorName: KnownColor.Highlight,
-            degreeOfGrayness);
-
-    private static Color GetGrayControlTextColor(float degreeOfGrayness = 1f) =>
-        ColorHelper.GetGrayTextColor(textColorName: KnownColor.ControlText, degreeOfGrayness);
 }

@@ -1,9 +1,9 @@
 namespace GitCommands.DiffMergeTools;
 
-internal class Meld : DiffMergeTool
+internal sealed class Meld : DiffMergeTool
 {
     /// <inheritdoc />
-    public override string ExeFileName => "meld.exe";
+    public override string ExeFileName => OperatingSystem.IsWindows() ? "meld.exe" : "meld";
 
     /// <inheritdoc />
     public override string MergeCommand => "\"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\"";

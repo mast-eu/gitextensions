@@ -117,9 +117,9 @@ public sealed class CommitDataManager : ICommitDataManager
     {
         ArgumentNullException.ThrowIfNull(revision);
 
-        if (revision.ObjectId is null)
+        if (revision.ObjectId.IsZero)
         {
-            throw new ArgumentException($"Cannot have a null {nameof(GitRevision.ObjectId)}.", nameof(revision));
+            throw new ArgumentException($"Cannot have a zero {nameof(GitRevision.ObjectId)}.", nameof(revision));
         }
 
         return new CommitData(revision.ObjectId, revision.ParentIds,
@@ -128,7 +128,15 @@ public sealed class CommitDataManager : ICommitDataManager
             revision.Body ?? revision.Subject)
         { ChildIds = children, Notes = revision.Notes };
 
-        static string FormatUser(string user, string email) => string.IsNullOrWhiteSpace(email) ? user : $"{user} <{email}>";
+        static string? FormatUser(string? user, string? email)
+        {
+            if (user is null)
+            {
+                return null;
+            }
+
+            return string.IsNullOrWhiteSpace(email) ? user : $"{user} <{email}>";
+        }
     }
 
     private IGitModule GetModule()

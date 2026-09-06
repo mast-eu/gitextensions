@@ -1,6 +1,6 @@
 ﻿namespace GitUI;
 
-internal class ToolStripExProfessionalRenderer : ToolStripProfessionalRenderer
+internal sealed class ToolStripExProfessionalRenderer : ToolStripProfessionalRenderer
 {
     public ToolStripExProfessionalRenderer()
     {
@@ -9,7 +9,7 @@ internal class ToolStripExProfessionalRenderer : ToolStripProfessionalRenderer
 
     protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
     {
-        if (e.ToolStrip.GetMenuItemBackgroundFilter()?.ShouldRenderMenuItemBackground(e) != false)
+        if (e.ToolStrip!.GetMenuItemBackgroundFilter()?.ShouldRenderMenuItemBackground(e) != false)
         {
             base.OnRenderMenuItemBackground(e);
         }

@@ -244,7 +244,7 @@ public partial class FormRebase : GitExtensionsDialog
     {
         using (WaitCursorScope.Enter())
         {
-            FormProcess.ShowDialog(this, UICommands, arguments: Commands.ContinueRebase(), Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(this, UICommands, arguments: Commands.ContinueRebase(), Module.WorkingDir, input: null, useDialogSettings: true, out string cmdOutput);
 
             if (!Module.InTheMiddleOfRebase())
             {
@@ -253,6 +253,10 @@ public partial class FormRebase : GitExtensionsDialog
 
             EnableButtons();
             PatchGrid.Initialize();
+            if (Module.CanContinueAction(cmdOutput))
+            {
+                BeginInvoke(btnContinueRebase.PerformClick);
+            }
         }
     }
 
@@ -260,7 +264,7 @@ public partial class FormRebase : GitExtensionsDialog
     {
         using (WaitCursorScope.Enter())
         {
-            PatchFile applyingPatch = PatchGrid.PatchFiles.FirstOrDefault(p => p.IsNext);
+            PatchFile? applyingPatch = PatchGrid.PatchFiles!.FirstOrDefault(p => p.IsNext);
             if (applyingPatch is not null)
             {
                 applyingPatch.IsSkipped = true;
@@ -320,7 +324,7 @@ public partial class FormRebase : GitExtensionsDialog
         {
             if (string.IsNullOrEmpty(cboBranches.Text))
             {
-                MessageBox.Show(this, _noBranchSelectedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _noBranchSelectedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -362,7 +366,7 @@ public partial class FormRebase : GitExtensionsDialog
             string cmdOutput = FormProcess.ReadDialog(this, UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
             if (cmdOutput.Trim() == "Current branch a is up to date.")
             {
-                MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBoxes.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             if (!Module.InTheMiddleOfAction() &&
@@ -373,6 +377,10 @@ public partial class FormRebase : GitExtensionsDialog
 
             EnableButtons();
             PatchGrid.Initialize();
+            if (Module.CanContinueAction(cmdOutput))
+            {
+                BeginInvoke(btnContinueRebase.PerformClick);
+            }
         }
     }
 
@@ -406,9 +414,9 @@ public partial class FormRebase : GitExtensionsDialog
         {
             AppSettings.ShowStashes = false;
             ObjectId firstParent = UICommands.Module.RevParse("HEAD~");
-            string preSelectedCommit = !string.IsNullOrWhiteSpace(txtFrom.Text) ? txtFrom.Text : firstParent?.ToString() ?? string.Empty;
+            string preSelectedCommit = !string.IsNullOrWhiteSpace(txtFrom.Text) ? txtFrom.Text : firstParent.IsZero ? string.Empty : firstParent.ToString();
 
-            string mergeBaseCommitId = null;
+            string? mergeBaseCommitId = null;
 
             if (!string.IsNullOrWhiteSpace(cboBranches.Text))
             {
@@ -416,7 +424,8 @@ public partial class FormRebase : GitExtensionsDialog
                 {
                     ObjectId commit1 = UICommands.Module.RevParse(cboBranches.Text);
                     ObjectId commit2 = UICommands.Module.RevParse("HEAD");
-                    mergeBaseCommitId = UICommands.Module.GetMergeBase(commit1, commit2)?.ToString();
+                    ObjectId mergeBase = UICommands.Module.GetMergeBase(commit1, commit2);
+                    mergeBaseCommitId = mergeBase.IsZero ? null : mergeBase.ToString();
                 }
                 catch (Exception)
                 {

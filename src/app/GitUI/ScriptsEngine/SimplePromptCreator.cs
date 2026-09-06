@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 namespace GitUI.ScriptsEngine;
 
 internal interface ISimplePromptCreator
@@ -7,7 +5,7 @@ internal interface ISimplePromptCreator
     IUserInputPrompt Create(string? title, string? label, string? defaultValue);
 }
 
-internal class SimplePromptCreator : ISimplePromptCreator
+internal sealed class SimplePromptCreator : ISimplePromptCreator
 {
     public IUserInputPrompt Create(string? title, string? label, string? defaultValue)
     {

@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.LeftPanel.ContextMenu;
@@ -94,6 +96,23 @@ partial class RepoObjectsTree : IMenuItemFactory
         _sortOrderContextMenuItem.Enable(isSingleRefSelected && showSortOrder);
     }
 
+    private void EnableWorktreeContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
+    {
+        bool isSingleWorktreeSelected = hasSingleSelection && selectedNode is WorktreeNode;
+        WorktreeNode? worktreeNode = selectedNode as WorktreeNode;
+        bool canActOnWorktree = isSingleWorktreeSelected && worktreeNode is { IsCurrent: false, Worktree.IsDeleted: false };
+        bool worktreePathExists = isSingleWorktreeSelected && worktreeNode is not null && Directory.Exists(worktreeNode.Worktree.Path);
+
+        // Always show menu items for any worktree node, but disable for current/deleted
+        mnubtnOpenWorktree.Enable(isSingleWorktreeSelected);
+        mnubtnOpenWorktree.Enabled = canActOnWorktree;
+        mnubtnDeleteWorktree.Enable(isSingleWorktreeSelected);
+        mnubtnDeleteWorktree.Enabled = canActOnWorktree;
+        mnubtnCopyWorktreePath.Enable(isSingleWorktreeSelected);
+        mnubtnShowWorktreeInFolder.Enable(isSingleWorktreeSelected);
+        mnubtnShowWorktreeInFolder.Enabled = worktreePathExists;
+    }
+
     private void EnableStashContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
     {
         bool isSingleStashSelected = hasSingleSelection && selectedNode is StashNode;
@@ -122,6 +141,7 @@ partial class RepoObjectsTree : IMenuItemFactory
         item.Click += (o, e) => Node.OnNode(treeMain.SelectedNode, onClick);
     }
 
+    [MemberNotNull(nameof(_sortByContextMenuItem), nameof(_sortOrderContextMenuItem), nameof(_localBranchMenuItems), nameof(_remoteBranchMenuItems), nameof(_tagNodeMenuItems))]
     private void RegisterContextActions()
     {
         copyContextMenuItem.SetRevisionFunc(() => _revisionGridInfo.GetSelectedRevisions());
@@ -192,13 +212,22 @@ partial class RepoObjectsTree : IMenuItemFactory
         RegisterClick<StashNode>(mnubtnPopStash, node => node.PopStash(this));
         RegisterClick<StashNode>(mnubtnDropStash, node => node.DropStash(this));
 
+        // Worktree
+        RegisterClick(mnubtnCreateWorktreeFromRootNode, () => _worktreeTree.CreateWorktree(this));
+        RegisterClick(mnubtnPruneWorktreesFromRootNode, () => _worktreeTree.PruneWorktrees(this));
+        RegisterClick(mnubtnManageWorktreesFromRootNode, () => _worktreeTree.ManageWorktrees(this));
+        RegisterClick<WorktreeNode>(mnubtnOpenWorktree, node => node.OpenWorktree());
+        RegisterClick<WorktreeNode>(mnubtnDeleteWorktree, node => node.DeleteWorktree());
+        RegisterClick<WorktreeNode>(mnubtnCopyWorktreePath, node => ClipboardUtil.TrySetText(node.Worktree.Path));
+        RegisterClick<WorktreeNode>(mnubtnShowWorktreeInFolder, node => OsShellUtil.OpenWithFileExplorer(node.Worktree.Path));
+
         // Expand / Collapse
         RegisterClick(mnubtnCollapse, () => GetSelectedNodes().HavingChildren().Collapsible().ForEach(node => node.TreeViewNode.Collapse()));
         RegisterClick(mnubtnExpand, () => GetSelectedNodes().HavingChildren().Expandable().ForEach(node => node.TreeViewNode.ExpandAll()));
 
         // Move up / down (for top level Trees)
-        RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode, up: true));
-        RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode, up: false));
+        RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode!, up: true));
+        RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode!, up: false));
 
         // Sort by / order
         _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() => ResortRefs(new FilteredGitRefsProvider(UICommands.Module).GetRefs));
@@ -220,7 +249,7 @@ partial class RepoObjectsTree : IMenuItemFactory
         copyContextMenuItem.Enable(hasSingleSelection && (selectedNode is BaseBranchLeafNode or StashNode) && selectedNode.Visible);
         filterForSelectedRefsMenuItem.Enable(selectedNodes.OfType<IGitRefActions>().Any()); // enable if selection contains refs
 
-        LocalBranchNode selectedLocalBranch = selectedNode as LocalBranchNode;
+        LocalBranchNode? selectedLocalBranch = selectedNode as LocalBranchNode;
 
         foreach (ToolStripItemWithKey item in _localBranchMenuItems)
         {
@@ -243,6 +272,8 @@ partial class RepoObjectsTree : IMenuItemFactory
         EnableMenuItems(hasSingleSelection && selectedNode is StashTree, mnubtnStashAllFromRootNode, mnubtnStashStagedFromRootNode, mnubtnManageStashFromRootNode);
         EnableStashContextMenu(hasSingleSelection, selectedNode);
         EnableSubmoduleContextMenu(hasSingleSelection, selectedNode);
+        EnableWorktreeContextMenu(hasSingleSelection, selectedNode);
+        EnableMenuItems(hasSingleSelection && selectedNode is WorktreeTree, mnubtnCreateWorktreeFromRootNode, mnubtnPruneWorktreesFromRootNode, mnubtnManageWorktreesFromRootNode);
         EnableMenuItems(hasSingleSelection && selectedNode is BranchPathNode, mnubtnCreateBranch, mnubtnDeleteAllBranches);
         EnableExpandCollapseContextMenu(selectedNodes);
         EnableMoveTreeUpDownContexMenu(hasSingleSelection, selectedNode);
